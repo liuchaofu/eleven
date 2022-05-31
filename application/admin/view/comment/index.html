@@ -1,0 +1,107 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>评论列表</h5>
+                        <div class="ibox-tools" >
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="container-fluid" style="text-align: center; ">
+                            <div class="col-md-12">
+                                <form class="form-inline pull-right" method="get">
+                                    <div class="form-group ">
+                                        开始时间:
+                                        <input type="text" class="date-time form-control w120" name="began" value="{$began}" >
+                                    </div>
+
+                                    <div class="form-group">
+                                        结束时间:
+                                        <input type="text" class="date-time form-control w120" name="end" value="{$end}" >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="评论用户" size="5" name="comment_user" value="{$comment_user}">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="评论商品" size="5" name="comment_goods" value="{$comment_goods}">
+                                    </div>
+
+
+                                    <button type="submit" class="btn btn-primary">搜索</button>
+
+                                </form>
+                                <br><br>
+                            </div>
+
+
+                            <br>
+                            <table class="table">
+                                <tbody><tr>
+
+                                    <th>评论用户</th>
+                                    <th>时间</th>
+                                    <th>评论商品</th>
+                                    <th>评论内容</th>
+                                    <th>是否显示</th>
+                                    <th>操作</th>
+                                </tr>
+                                {volist name="list" id="vo"}
+                                <tr>
+                                    <td>{$vo.nickname}</td>
+                                    <td>{$vo.add_time|date="Y-m-d H:i:s",###}</td>
+                                    <td>{$vo.goods_name}</td>
+                                    <td>
+                                        <textarea name="" id="" cols="30" rows="10" style="width: 200px;height: 60px;border-radius: 5px;border: 1px solid rgb(204, 204, 204);padding-left: 8px;" readonly="readonly">  {$vo.content} </textarea>
+                                    </td>
+                                    <td>
+										<div class="layui-form">
+											<input type="checkbox" name="is_show" dt-key="{$vo.comment_id}" dt-field="is_show" dt-table="comment" lay-skin="switch" lay-filter="switchStatus" {if condition="$vo.is_show neq '0'"}checked{/if} lay-text="开启|关闭">
+										</div>
+                                        <!--{if condition="$vo.is_show eq '0'"}-->
+                                        <!--<a href="javascript:void(0);" status = {$vo.is_show} onclick="changeStatus({$vo.comment_id},$(this))" class="btn btn-info" >-->
+                                            <!--&lt;!&ndash;不显示&ndash;&gt;-->
+                                            <!--<span class="glyphicon glyphicon-remove"></span>-->
+                                        <!--</a>-->
+                                        <!--{else /}-->
+                                        <!--<a href="javascript:void(0);" status = {$vo.is_show} onclick="changeStatus({$vo.comment_id},$(this))" class="btn btn-primary ">-->
+                                            <!--&lt;!&ndash;显示&ndash;&gt;-->
+                                            <!--<span class="glyphicon glyphicon-ok"></span>-->
+                                        <!--</a>-->
+                                        <!--{/if}-->
+                                    </td>
+
+                                    <td>
+                                        <button class="btn btn-success btn-open" dt-url="{:url('comment_more',['comment_id'=>$vo.comment_id])}" dt-title="查看更多内容">查看</button>
+
+                                        <button class="btn btn-primary btn-open" dt-url="{:url('comment_edit',['comment_id'=>$vo.comment_id])}" dt-title="评论编辑">编辑</button>
+                                        <button class="btn btn-danger btn-del" dt-field="comment_id" dt-value="{$vo.comment_id}" dt-table="comment">删除</button>
+                                    </td>
+
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                            <div class="pull-right">
+                                {$list->render()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+{include file="admin@/public/public_js"/}
+</html>

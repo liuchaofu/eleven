@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品模型列表</h5>
+                    <div class="ibox-tools" >        
+                        <button class="btn btn-primary btn-open" dt-url="{:url('model_add')}" dt-title="添加模型">添加</button>
+                    </div>
+                </div>
+				<div class="ibox-title">
+					<form class="form-inline" action="{:url('model')}" method="post">
+						<div class="form-group">
+							<input type="text" name="keyword" value="{$param.keyword|default=""}" class="form-control w120" placeholder="模型名">
+							<input type="hidden">
+							<button class="btn btn-primary">搜索</button>
+						</div>
+					</form>
+				</div>
+				<div class="ibox-content">
+					<div class="table-responsive" style="text-align:center">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>模型名称</th>
+									<th>是否启用</th>
+									<th>排序</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								{volist name="list" id="vo"}
+								<tr>
+									<td>{$vo.id}</td>
+									<td>{$vo.name}</td>
+									<td>
+										<div class="layui-form">
+											<input type="checkbox" name="status" dt-key="{$vo.id}" dt-field="status" dt-table="goods_model" lay-skin="switch" lay-filter="switchStatus" {if condition="$vo.status neq '0'"}checked{/if} lay-text="开启|关闭">
+										</div>
+									</td>
+									<td style="width:100px;"><input value="{$vo.sort}" style="text-align:center" class="form-control ajax-input" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" dt-url="{:url('changeField',['table'=>'goods_model','field'=>'sort','key'=>$vo.id])}"></td>
+									<td>
+									{if condition = "in_array('goods_model_edit',$_SESSION['perm_arr'])"}
+									<button class="btn btn-info btn-open" dt-url="{:url('model_edit',['id'=>$vo.id])}" dt-title="模型编辑">编辑</button>
+									{/if}
+									{if condition = "in_array('goods_model_del',$_SESSION['perm_arr'])"}
+									<button class="btn btn-danger btn-del" dt-url="{:url('model_del')}" value="{$vo.id}">删除</button>
+									{/if}
+									</td>
+									
+								</tr>
+								{/volist}
+							</tbody>
+						</table>
+					</div>
+					<div id="TP_page">{$list->render()}</div>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{include file="admin@/public/global_js" /}
+</html>

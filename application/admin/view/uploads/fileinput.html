@@ -1,0 +1,106 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {include file="admin@/public/global_css" /}
+    <!--<link href="__PUBLIC__/admin/file/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/file/css/fileinput.css" media="all" />
+</head>
+
+<body class="gray-bg">
+
+        <div class="container kv-main">
+
+            <br>
+            <form  enctype="multipart/form-data">
+
+                <div class="form-group" >
+                    <!-- 初始化插件 -->
+                    <input id="file-1" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="2" name="images">
+
+                    <!--<a href="{:url('admin/Banner/banner_add')}" class="btn btn-primary" style="float: right">添加Banner类别</a>-->
+                    <!--分类列表-->
+                    <select name="cat_id" class="form-control" style="width: 150px; float: left; margin-right: 25px;" id="mySelect">
+                        <option value="1">请选择位置</option>
+                        {volist name="cates" id="cate"}
+                        <option value="{$cate.id}">{$cate.name}</option>
+                        {/volist}
+                    </select>
+
+
+
+                </div>
+
+            </form>
+        </div>
+
+</body>
+
+
+{include file="admin@/public/global_js"/}
+<script type="text/javascript" src="__PUBLIC__/admin/js/plugins/pace/pace.min.js"></script>
+
+
+<script src="__PUBLIC__/admin/file/js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin/file/js/fileinput.js" type="text/javascript"></script>
+
+<!-- 中文化 -->
+<script type="text/javascript" src="__PUBLIC__/admin/file/js/fileinput_locale_zh.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+
+    // 初始化filleinput控件  第一次初始化
+    function initFileInput(ctrlName, uploadUrl){
+        var control = $('#'+ctrlName);
+        control.fileinput({
+            language: 'zh', //设置语言
+            uploadUrl: "{:url('admin/Uploads/uploadImg')}",    //上传的地址
+            allowedFileExtensions:['jpg','png'],    //接收的文件后缀
+            showUpload:true,    //是否显示上传按钮
+            showCaption:false,    //是否显示标题
+            maxFileSize: 0,    //图片最大尺寸kb 为0不限制
+            //maxFilesNum: 3,        //最多上传图片
+            maxFileCount: 3, //表示允许同时上传的最大文件个数
+            overwriteInitial: false,//不覆盖已上传的图片
+            browseClass: "btn btn-info", //按钮样式
+            dropZoneEnabled: true,//是否显示拖拽区域
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+            uploadExtraData:function (previewId, index) {
+                return {
+                    category : 'banner',
+                };
+            },
+        });
+    }
+
+    //初始化fileinput控件,第一次初始化 (控件id，上传地址)
+    initFileInput("file-1", "/Uploads/uploadImg");
+
+    // 监听事件
+    $("#file-1").on("fileuploaded", function (event, data, previewId, index) {
+        // 上传地址
+        //对象
+        var res =data.response;
+        var oop = eval('(' + res + ')');
+        var img =oop.res;
+        //下拉选项
+        var cat =$("#mySelect").val();
+
+        $.ajax({
+            url: 'add_img',
+            data: {img:img,cat_id:cat},
+            type: "post",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+
+            }
+        });
+
+    });
+</script>
+</html>

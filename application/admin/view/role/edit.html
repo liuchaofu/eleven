@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+			<div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form class="form-horizontal" action="{:url('edit')}">
+						<input name="role_id" value="{$result.role_id}" style="display:none;" />
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">角色名</label>
+                                <div class="col-sm-8">
+                                    <input  name="role_name" type="text" class="form-control" value="{$result.role_name}" >
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-sm-3 control-label">角色描述</label>
+                                <div class="col-sm-8">
+                                    <input  name="role_desc" type="text" class="form-control" value="{$result.role_desc}"  >
+                                </div>
+                            </div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">权限选择</label>
+								<div class="col-sm-8">
+                                    <table>
+									{volist name="list" id="vo"}
+									<tr class="form-group" >
+									<td width="200px;" style="border:1px solid #ccc;">
+										<input type="checkbox" value="{$vo.tag_name}" name="act_list[]" {in name="$vo.tag_name" value="$result['act_list']"} checked {/in}>
+										<span style="font-weight:600;">{$vo.menu_name}</span>
+										</input>
+									</td>
+									<td style="border:1px solid #ccc;">
+										{volist name="$vo.child" id="ch"}
+										
+										<div style="width:200px;float:left;">
+										<input type="checkbox" value="{$ch.tag_name}" name="act_list[]" {in name="$ch.tag_name" value="$result['act_list']"} checked {/in}>{$ch.menu_name}</input>
+										</div>
+										{/volist}
+									</td>
+									</tr>
+									{/volist}
+									<table>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:30px;" >
+								<div class="col-sm-4 col-sm-offset-3">
+                                    <span class="btn btn-primary checkall">全选/全不选</span>
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <span class="btn btn-primary btn-comply">提交</span>
+									<button class="btn btn-close">取消</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+			</div>
+        </div>
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+<script type="text/javascript">
+var i=true;
+$(document).ready(function(){
+	$(".checkall").click(function(){
+		if (i) {
+			$("input[type='checkbox']").prop("checked", true);//attr点击第三次之后没反应了
+			i=false;
+		}
+		else {
+			$("input[type='checkbox']").prop("checked", false);
+			i=true;
+		}
+	})
+});
+</html>

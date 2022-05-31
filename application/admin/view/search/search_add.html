@@ -1,0 +1,147 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/js/layui/css/layui.css">
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>热搜添加</h5>
+                        <div class="ibox-tools" >
+
+                            <button class="btn btn-primary"  id="AddMoreFileBox">添加</button>
+
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <form id="user_form" class="form-horizontal " method="post" action="{:url('search_add')}" enctype="multipart/form-data">
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        热门选项：</label>
+                                    <div class="col-sm-9" id="InputsWrapper">
+                                        <input type="text" name="hot[]" class="form-control" placeholder="请输入热门内容" style="width: 50%;"  > <span class="help-block m-b-none"></span>
+                                        <input type="text" name="sort[]" class="form-control" placeholder="请输入热门排序" style="width: 50%;" > <span class="help-block m-b-none"></span>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-5 col-sm-7">
+                                        <span class="btn btn-primary btn-comply">修改</span>
+                                        <a href="javascript:void(0);" onclick=" generate('1')" class="btn btn-primary ">生成</a>
+                                        <!--<button class="btn btn-close">取消</button>-->
+                                    </div>
+                                </div>
+
+
+                        </form>
+
+                        <div class="info">
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+{include file="admin@/public/global_js"/}
+<script src="__PUBLIC__/admin/js/layui/layui.js"></script>
+<script>
+    $(document).ready(function() {
+        var MaxInputs    = 8; //maximum input boxes allowed
+        var InputsWrapper  = $("#InputsWrapper"); //Input boxes wrapper ID
+        var AddButton    = $("#AddMoreFileBox"); //Add button ID
+        var x = InputsWrapper.length; //initlal text box count
+        var FieldCount=1; //to keep track of text box added
+        $(AddButton).click(function (e) //on add input button click
+        {
+            if(x <= MaxInputs) //max input box allowed
+            {
+                FieldCount++; //text box added increment
+                //add input box
+                $(InputsWrapper).append
+                ('  <div><hr><input type="text" name="hot[]" class="form-control" placeholder="请输入热门内容" style="width: 50%;"  > <span class="help-block m-b-none"></span>\n' +
+                    '<button class="btn btn-warning removeclass " style="float: right;margin-right: 20%;margin-top: -5%;">删除</button>' +
+                    ' <input type="text" name="sort[]" class="form-control" placeholder="请输入热门排序" style="width: 50%;" > <span class="help-block m-b-none"></span> </div>');
+                x++; //text box increment
+            }
+            return false;
+        });
+        $("body").on("click",".removeclass", function(e){ //user click on remove text
+            if( x > 1 ) {
+                $(this).parent('div').remove(); //remove text box
+                x--; //decrement textbox
+            }
+            return false;
+        })
+    });
+</script>
+
+ <script>
+     function generate(mark) {
+         $.ajax({
+             type: "POST",
+             url: "{:url('admin/Search/search_generate')}",//+tab,
+             // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+             data: {mark:mark},// 你的formid
+             dataType: "json",
+             success: function (data) {
+                 // console.log(data);
+                 if (data.status ==1){
+                     layer.msg(data.msg, {
+                         icon: 1,
+                         time: 2000, //2秒关闭（如果不配置，默认是3秒）
+                     }, function(){
+                         //do something
+                         var str = '<table  class="table-bordered" width="50%;" style="text-align: center; margin-left: 25%;">' +
+                             '    <thead>' +
+                             '    <tr>' +
+                             '        <th>关键词</th>' +
+                             '        <th>次数</th>' +
+
+                             '    </tr>' +
+                             '    </thead>' +
+                             '    <tbody>';
+                         $.each(data.data, function (index, info) {
+                             // console.log(info);return;
+                             str += '<tr>' +
+                                 '<td>' + info.keys_word+ '</td>' +
+                                 '<td>' + info.total+ '</td>' +
+                                 '</tr>';
+                         })
+                         str += '    </tbody>' +
+                             '</table>';
+                         $(".info").html(str);
+
+
+                     });
+                 }else {
+                     // alert('错误');
+                     layer.open({content:data.msg,time:2000});//执行有误
+                     if (data.status == -1)
+                         location.href = "{:url('admin/Search/search_index')}";
+                     return false;
+                 }
+             }
+         });
+     }
+ </script>
+
+</html>

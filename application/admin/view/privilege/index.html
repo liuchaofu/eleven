@@ -1,0 +1,63 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>权限菜单列表</h5>
+						<div class="ibox-tools" >
+							<button class="btn btn-primary btn-open" dt-url="{:url('add')}" dt-width="50%" dt-height="50%" dt-title="权限添加">添加</button>
+						</div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive" style="text-align:center">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+										<th>ID</th>
+										<th>菜单名称</th>
+                                        <th>标识名</th>
+                                        <th>URL</th>
+                                        <th>排序</th>
+                                        <th>修改日期</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+								{volist name="list" id="vo"}
+                                    <tr>
+										<td>{$vo.id}</td>
+                                        <td><span>{$vo['delimiter']|default=""}</span>{$vo.menu_name}</td>
+                                        <td>{$vo.tag_name}</td>
+                                        <td>{$vo.url}</td>
+                                        <td style="width:100px;">
+											<input value="{$vo.sort}" class="form-control ajax-input" style="text-align:center;" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" dt-url="{:url('changeField',['table'=>'perm_menu','field'=>'sort','id'=>$vo.id])}"></td>
+										<td>{:date("Y-m-d H:i:s",$vo.reg_time)}</td>
+                                        <td>
+										{if condition = "in_array('permit_edit',$_SESSION['perm_arr'])"}
+										<button class="btn btn-info btn-open" dt-title="权限修改" dt-url="{:url('edit',['id'=>$vo.id])}">编辑</button>
+										{/if}
+										{if condition = "in_array('permit_del',$_SESSION['perm_arr'])"}
+										<button class="btn btn-danger btn-del" dt-url="{:url('del')}" value="{$vo.id}">删除</button>
+										{/if}
+                                        </td>
+                                    </tr>
+                                 {/volist}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+</html>

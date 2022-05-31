@@ -1,0 +1,69 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+    <style type="text/css">
+        .table{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-content">
+
+                    <div >
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>收件人</th>
+                                <th>地址</th>
+                                <th>邮箱</th>
+                                <th>手机</th>
+                                <th>是否是默认</th>
+                            </tr>
+                            </thead>
+                            <tbody class="table_info">
+                            {volist name="list" id="vo"}
+                                <tr>
+                                    <td>{$vo.consignee}</td>
+                                    <td>{$vo.address}</td>
+                                    <td>{$vo.email}</td>
+                                    <td>{$vo.mobile}</td>
+                                    <td>
+
+                                        {if condition="$vo.is_default eq 1"}是
+                                        {else /} 不是
+                                        {/if}
+
+                                    </td>
+                                </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+
+{include file="admin@/public/global_js"/}
+
+
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <!--<div class="ibox-title">-->
+                <!--<h5>发送信息</h5>-->
+                <!--</div>-->
+                <div class="ibox-content">
+
+                    <form id="user_form" class="form-horizontal " method="post" action="" enctype="multipart/form-data">
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                <span class="text-danger">*</span>选择：</label>
+                            <div class="col-sm-9">
+                                <dl class="row">
+                                    <dt class="tit">
+                                        <label></label>
+                                    </dt>
+                                    <dd class="opt">
+                                        <input id="allvip" type="radio" checked="checked" name="is_all" value="0"
+                                               onclick="changeOne()">发送给以下会员
+                                        <input id="someonevip" type="radio" name="is_all" value="1"
+                                               onclick="changeAll()">发送给全部会员
+                                    </dd>
+                                </dl>
+
+                            </div>
+                        </div>
+                        <!--会员显示-->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                会员列表：</label>
+                            <div class="col-sm-9 ">
+
+                                <dd class="con">
+
+                                </dd>
+                                <span class="vip"></span>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                <span class="text-danger">*</span>标题：</label>
+                            <div class="col-sm-9">
+                                <input type="email" name="title" class="form-control" placeholder="请输入文本"
+                                       style="width: 300px;"> <span class="help-block m-b-none"></span>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">图片</label>
+                            <div class="col-sm-9">
+                                <a class="btn btn-primary btn-img" dt-name="img" dt-value="{$data['image']|default=""}"
+                                dt-group="message">上传图片</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span>快捷消息:</span></label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="msg">
+                                    <option value="0"> 请选择</option>
+                                    {volist name="data" id="vo"}
+                                    <option value="{$vo['id']|default="
+                                    "}" >{$vo['content']}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                <span class="text-danger">*</span>内容：</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control contents" rows="5" name="content"
+                                          style="width: 300px;"></textarea>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-5 col-sm-7">
+                                <!--<button type="button" class="btn btn-primary" onclick="user_add()">添加用户</button>-->
+
+                                <span class="btn btn-primary btn-comply">提交</span>
+                                <button class="btn btn-close">取消</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+{include file="admin@/public/global_js"/}
+
+<script type="text/javascript">
+    $(function () {
+        $("#msg").click(function () {
+            var msg = $("#msg option:selected").text();
+            //追加到内容
+            $(".contents").val(msg);
+        });
+    });
+
+
+    $(function () {
+        //得到传过来选中的数据
+        var data = window.parent.vip();
+        // console.log(data);
+
+        if (data == undefined) {
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            layer.confirm('请选择需要执行的内容', {
+                btn: ['确定']
+            }, function () {
+
+                parent.layer.close(index);
+            }, function () {
+
+                parent.layer.close(index);
+            });
+
+
+        }
+        $.ajax({
+            url: "{:url('admin/Users/send_vip')}",
+            type: "post",
+            dataType: "json",
+            data: data,
+            success: function (res) {
+                //把数据追加回视图页面去
+                var html = '';
+                $.each(res.data, function (k, v) {
+                    html +=
+                        '                                        <input type="hidden" name="user[]" value="' + v.id + '">\n' +
+                        '                                        <p><span>' + v.id + '</span>&nbsp;<span>' + v.name + '</span></p>\n';
+                });
+                //追加到视图里面去
+                $(".con").append(html);
+            }
+
+        });
+    });
+
+
+    function changeAll() {
+        //替换内容
+        $(".con").empty();
+        html = '';
+        html += '<input type="hidden" name="user[]" value="">';
+        $(".con").append(html);
+        $(".vip").text('全部');
+    }
+
+    function changeOne() {
+        //追加选择的会员数据
+        $(".vip").empty();
+
+        //得到传过来选中的数据
+        var data = window.parent.vip();
+        $.ajax({
+            url: "{:url('admin/Users/send_vip')}",
+            type: "post",
+            dataType: "json",
+            data: data,
+            success: function (res) {
+
+                //把数据追加回视图页面去
+                var html = '';
+                $.each(res.data, function (k, v) {
+                    html +=
+                        '                                        <input type="hidden" name="user[]" value="' + v.id + '">\n' +
+                        '                                        <p><span>' + v.id + '</span>&nbsp;<span>' + v.name + '</span></p>\n';
+                });
+                //追加到视图里面去
+                $(".con").append(html);
+            }
+
+        });
+
+    }
+
+</script>
+</html>

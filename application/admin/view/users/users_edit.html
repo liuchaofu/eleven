@@ -1,0 +1,315 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+
+                    <div class="ibox-content">
+
+                        <form id="user_form" class="form-horizontal " method="post" action="{:url('user_edit')}" enctype="multipart/form-data">
+
+                            <input style="display:none;" name="user_id" value="{$data.user_id}" />
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="text-danger">*</span>用户邮箱：</label>
+                                    <div class="col-sm-9">
+                                        <input type="email" name="email" class="form-control" value="{$data.email}" placeholder="请输入文本" > <span class="help-block m-b-none"></span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="text-danger">*</span>用户昵称：</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="nickname" class="form-control" value="{$data.nickname}" placeholder="请输入文本" > <span class="help-block m-b-none"></span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="text-danger">*</span>用户密码：</label>
+                                    <div class="col-sm-9">
+                                        <input type="password" name="password" class="form-control"  placeholder="请输入文本" > <span class="help-block m-b-none"></span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="text-danger">*</span>性别：</label>
+                                    <div class="col-sm-9">
+                                        {if condition="$data.sex eq '0'"}
+                                        <label class="radio-inline">
+                                            <input type="radio"  value="0"  checked id="optionsRadios1" name="sex">保密</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" value="1" id="optionsRadios2" name="sex">男</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" value="2" id="optionsRadios3" name="sex">女</label>
+
+                                        {elseif condition="$data.sex eq 1"/}
+                                        <label class="radio-inline">
+                                            <input type="radio"  value="0"  id="optionsRadios4" name="sex">保密</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" value="1" checked id="optionsRadios5" name="sex">男</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" value="2" id="optionsRadios6" name="sex">女</label>
+
+                                        {else /}
+                                        <label class="radio-inline">
+                                            <input type="radio"  value="0"  id="optionsRadios7" name="sex">保密</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" value="1" id="optionsRadios8" name="sex">男</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" value="2" checked id="optionsRadios9" name="sex">女</label>
+
+                                        {/if}
+
+
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="text-danger">*</span>生日：</label>
+                                    <div class="col-sm-9">
+                                        <label>
+                                            <input type='date' class='form-control ' value="" id='dateBegin' name='birthday'>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="text-danger">*</span>用户余额：</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="user_money" class="form-control" value="{$data.user_money}" placeholder="请输入文本" > <span class="help-block m-b-none"></span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="text-danger">*</span>qq：</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="qq" class="form-control" value="{$data.qq}" placeholder="请输入文本" > <span class="help-block m-b-none"></span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="text-danger">*</span>手机：</label>
+                                    <div class="col-sm-9">
+                                        <input type="tel" name="mobile" class="form-control" value="{$data.mobile}" placeholder="请输入文本" > <span class="help-block m-b-none"></span>
+
+                                    </div>
+                                </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">旧版头像</label>
+
+                                <div class="col-sm-9">
+                                    {if condition="$data.oauth eq 'wx'"}
+                                    <img src="{$data.head_pic}" alt="" width="100px" height="100px">
+                                    {else /}
+                                    <img src="__UPLOADS__{$data.head_pic}" alt="" width="100px" height="100px">
+                                    {/if}
+
+                                </div>
+
+                            </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label"> 头像</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="hidden" name="head_pic" value="" id="pic">
+                                        <!--dom结构部分-->
+                                        <div id="uploader-demo">
+                                            <!--用来存放item-->
+                                            <div id="fileList" class="uploader-list"></div>
+                                            <div id="filePicker">选择图片</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-5 col-sm-7">
+                                        <!--<button type="button" class="btn btn-primary" onclick="user_add()">添加用户</button>-->
+                                        <!--<button class="btn btn-primary" type="submit">提交</button>-->
+                                        <span class="btn btn-primary btn-comply">提交</span>
+                                        <button class="btn btn-close">取消</button>
+                                    </div>
+                                </div>
+
+
+                        </form>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+{include file="admin@/public/global_js"/}
+<script type="text/javascript">
+    // 图片上传demo
+    jQuery(function () {
+        var $ = jQuery,
+            $list = $('#fileList'),
+            // 优化retina, 在retina下这个值是2
+            ratio = window.devicePixelRatio || 1,
+
+            // 缩略图大小
+            thumbnailWidth = 100 * ratio,
+            thumbnailHeight = 100 * ratio,
+
+            // Web Uploader实例
+            uploader;
+
+        // 初始化Web Uploader
+        uploader = WebUploader.create({
+
+            // 自动上传。
+            auto: true,
+
+            // formData: {
+            //     // 这里的token是外部生成的长期有效的，如果把token写死，是可以上传的。
+            //     _token:'{{csrf_token()}}'
+            // },
+
+
+            // swf文件路径
+            swf: '/webuploader/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '{:url("admin/Users/upload")}',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker',
+
+            // 只允许选择文件，可选。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+
+        // 当有文件添加进来的时候
+        uploader.on('fileQueued', function (file) {
+            var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail">' +
+                '<img>' +
+                '<div class="info">' + file.name + '</div>' +
+                '</div>'
+                ),
+                $img = $li.find('img');
+
+            $list.html($li);
+
+            // 创建缩略图
+            uploader.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr('src', src);
+            }, thumbnailWidth, thumbnailHeight);
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress span');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo($li)
+                    .find('span');
+            }
+
+            $percent.css('width', percentage * 100 + '%');
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on('uploadSuccess', function (file,data) {
+            $('#' + file.id).addClass('upload-state-done');
+            // console.log(data);
+
+            $("#pic").val(data);
+        });
+
+        // 文件上传失败，现实上传出错。
+        uploader.on('uploadError', function (file) {
+            var $li = $('#' + file.id),
+                $error = $li.find('div.error');
+
+            // 避免重复创建
+            if (!$error.length) {
+                $error = $('<div class="error"></div>').appendTo($li);
+            }
+
+            $error.text('上传失败');
+        })
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').remove();
+        });
+    });
+</script>
+<script type="text/javascript">
+    function user_add() {
+
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Users/users_add')}",//+tab,
+            data: $('#user_form').serialize(),// 你的formid
+            dataType: "json",
+            success: function (data) {
+                // console.log(data);return;
+                if (data.status == 1){
+                    layer.msg(data.res, {
+                        icon: 1,
+                        time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        //do something
+                        window.location.href='users_index';
+
+                    });
+                }else {
+                    // alert('错误');
+                    // layer.msg('有误');
+                    layer.open({content:data.res,time:2});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Users/users_add')}";
+                    return false;
+                }
+            }
+        });
+    }
+
+</script>
+</html>

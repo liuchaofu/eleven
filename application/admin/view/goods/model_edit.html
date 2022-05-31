@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal" action="{:url('model_edit')}">
+					<input type="hidden" name="id" value="{$model.id}">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">
+							<span class="text-danger">*</span><span>模型名称名</span>
+						</label>
+						<div class="col-sm-8">
+							<input type="text" name="name" value="{$model.name}" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label"><span>排序</span></label>
+						<div class="col-sm-8">
+							<input type="text" name="sort" value="{$model.sort}" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></span>
+						</div>
+					</div>
+					<div class="form-group" id="radio" dt-radio="{$model.status}">
+						<label class="col-sm-3 control-label"><span class="text-danger">*</span><span>是否启用</span></label>
+						<div class="col-sm-8">
+							<label style="padding-right:15px;">
+								<input type="radio" name="status" value="1" checked >是
+							</label>
+							<label>
+								<input type="radio"  name="status" value="0">否
+							</label>
+						</div>
+					</div>
+					<!--商品模型-->
+					<div role="tabpanel" class="tab-pane">
+						<div class="panel-body">
+							<div class="ibox-title">
+								<div class="pull-left">
+									<a class="btn btn-primary add-spec">新增规格</a>
+								</div>
+							</div>
+							<div class="mt8" id="copy">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th style="width: 150px;text-align:center;">规格名</th>
+											<th style="width: 120px;">排序</th>
+											<th style="width: 140px;">是否可上传规格图</th>
+											<th>规格值</th>
+											<th style="width: 120px;">操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										{volist name="spec" id="vo" key="num"}
+										<tr style="border-bottom:solid 1px #f5eded;">
+											<td style="border-right:solid 1px #f5eded;">
+												<input type="text" name="data[name][]" value="{$vo.name}" class="form-control ajax-input" dt-url="{:url('changeField',['table'=>'spec','field'=>'name','key'=>$vo.id])}">
+											</td>
+											<td style="border-right:solid 2px #f5eded;">
+												<input type="text" name="data[order][]" class="form-control ajax-input" value="{$vo.order}" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" dt-url="{:url('changeField',['table'=>'spec','field'=>'order','key'=>$vo.id])}">	
+											</td>
+											<td style="border-right:solid 2px #f5eded;text-align:center;">
+												<input type="hidden" id="is_upload_image" name="data[is_upload_image][]" value="{$vo.is_upload_image}">
+												<div class="layui-form">
+													<input type="checkbox" dt-key="{$vo.id}" dt-field="is_upload_image" dt-table="spec" lay-skin="switch" lay-filter="switch" {if condition="$vo.is_upload_image neq '0'"}checked{/if} lay-text="开启|关闭">
+												</div>	
+											</td>
+											<td style="border-right:solid 2px #f5eded;">
+												{volist name="$vo.item" id="v"}
+												<div style="float:left;padding-right:10px;height:34px;" id="spec_item_div">
+													<input type="text" style="width:80px;" class="form-control ajax-input" name="data[spec][{$num-1}][]" value="{$v.item}" dt-url="{:url('changeField',['table'=>'spec_item','field'=>'item','key'=>$v.id])}">
+													<span class="ys-btn-close delete_spec_item" dt-item-id="{$v.id}">×</span>
+												</div>
+												{/volist}
+												<input type="text" maxlength="20" id="spec_item_name" placeholder="规格值名称" class="form-control" style="width:80px;display:inline;">
+												<a href="javascript:void(0);" class="add_spec_item" tr-len="{$num-1}" style="margin-left: 2px;" dt-spec-id="{$vo.id}">添加</a>
+											</td>
+											<td style="text-align: center;"><a class="btn btn-primary del-spec" dt-id="{$vo.id}">删除</a></td>
+										</tr>
+										{/volist}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!--end-->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary btn-comply">确定</button>
+						<button type="button" class="btn btn-default btn-close" >取消</button>
+					</div>
+				</form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{include file="admin@/public/global_js"/}
+<script type="text/javascript">
+//增加规格
+layui.use(['form'], function(){
+	var form = layui.form,layer = layui.layer;
+	$('.add-spec').click(function(){
+		var spec_len = $('#copy').find('tbody').find('tr').length;
+		if(spec_len >= 4){
+			layer.open({icon: 2, content: '规格最多可添加3个'});
+			return;
+		}
+		var spec_item_tr = '<tr style="border-bottom:solid 1px #f5eded;">'+
+						'<input type="hidden" name="info[key][]" value='+spec_len+'>'+
+						'<td style="border-right:solid 1px #f5eded;">'+
+						'<input type="text" name="info[name][]"  class="form-control" placeholder="规格名">'+
+						'</td>'+
+						'<td style="border-right:solid 2px #f5eded;">'+
+						'<input type="text" name="info[order][]" class="form-control" value="0" onkeyup="this.value=this.value.replace(/[^\d]/g,"")">'+	
+						'</td>'+
+						'<td style="border-right:solid 2px #f5eded;text-align:center;">'+
+							'<input type="hidden" id="is_upload_image" name="info[is_upload_image][]" value="0">'+
+							'<div class="layui-form">'+
+								'<input type="checkbox" lay-skin="switch" lay-filter="switch" lay-text="开启|关闭">'+
+							'</div>'+
+						'</td>'+
+						'<td style="border-right:solid 2px #f5eded;">'+
+						'<input type="text" maxlength="20" id="spec_item_name" placeholder="规格值名称" class="form-control" style="width:80px;display:inline;">'+
+						'<a href="javascript:void(0);" class="add_spec_item" tr-len='+spec_len+' style="margin-left: 2px;">添加</a>'+
+						'</td>'+
+						'<td style="text-align: center;"><a class="btn btn-primary del-spec">删除</a></td>'+
+						'</tr>'
+		$('#copy').find('table').append(spec_item_tr);
+		form.render();
+	});
+});
+//删除规格
+$(document).on('click','.del-spec',function(){
+	var id = $(this).attr('dt-id')?$(this).attr('dt-id'):0;
+	if(id){
+		$.post("/admin/goods/model_spec_ajax",{'id':id},function(res){
+			if(res.status){
+				layer.msg(res.msg,{icon: 1});
+				setTimeout("window.location.reload();", 1000);
+			}else{
+				layer.msg(res.msg,{icon: 2});
+			}
+		});
+		return;
+	}
+	if($('.del-spec').length > 1){
+		$(this).parents('tr').remove();
+	}else{
+		$(this).parents('tr').find('input').val('');
+	}
+});
+//添加规格值
+$(document).on('click', '.add_spec_item', function () {
+	var spec_item_name = $(this).parent().find("#spec_item_name").val();
+	if ($.trim(spec_item_name) == ''){
+		layer.open({icon: 2, content: '规格值名称不能为空'});
+		return;
+	}
+	var spec_item_length = $(this).parent().find('div').length;
+	if(spec_item_length >= 5){
+		layer.open({icon: 2, content: '规格值最多可添加5个'});
+		return;
+	}
+	var spec_tr_length = $(this).attr('tr-len');
+	var html = '<div style="float:left;padding-right:10px;height:34px;" id="spec_item_div"> ' +
+			'<input type="text" style="width:80px;" class="form-control" name="info[spec]['+spec_tr_length+'][]" value="'+spec_item_name+'"> ' +
+			'<span class="ys-btn-close delete_spec_item">×</span> ' +
+			'</div>';
+	var spec_id = $(this).attr('dt-spec-id')?$(this).attr('dt-spec-id'):0;
+	if(spec_id){
+		$.post("/admin/goods/model_item_ajax",{'spec_id':spec_id,'item':spec_item_name},function(res){
+			if(res.status){
+				layer.msg(res.msg,{icon: 1});
+				setTimeout("window.location.reload();", 1000);
+			}else{
+				layer.msg(res.msg,{icon: 2});
+			}
+		});
+		return;
+	}
+	$(this).parent().find("#spec_item_name").before(html).val('');
+});
+//删除规格值
+$(document).on('click','.delete_spec_item',function(){
+	var id = $(this).attr('dt-item-id')? $(this).attr('dt-item-id'):0;
+	if(id){
+		$.post("/admin/goods/model_item_ajax",{'id':id},function(res){
+			if(res.status){
+				layer.msg(res.msg,{icon: 1});
+				setTimeout("window.location.reload();", 1000);
+			}else{
+				layer.msg(res.msg,{icon: 2});
+			}
+		});
+		return;
+	}
+	$(this).parent().remove();
+});
+//layui开启关闭赋值
+layui.use(['form'], function(){
+	var form = layui.form,layer = layui.layer;
+	form.on('switch(switch)', function(data){
+		var checked = data.elem.checked;
+		var key = $(this).attr('dt-key')? $(this).attr('dt-key'):false;
+		if(key){
+			var table = $(this).attr('dt-table');
+			var field = $(this).attr('dt-field');
+			if(checked){
+				var value = 1;
+			}else{
+				var value = 0;
+			}
+			$.post("/admin/common/changeField",
+				{'table':table,'key':key,'field':field,'value':value},
+				function(res){
+					layer.msg(res.msg); return;
+			});
+		}
+		if(checked){
+			$(this).parent().parent().find('#is_upload_image').val('1');
+		}else{
+			$(this).parent().parent().find('#is_upload_image').val('0');
+		}
+	});
+});
+</script>
+</html>

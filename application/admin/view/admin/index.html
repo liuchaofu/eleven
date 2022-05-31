@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>管理员列表</h5>
+						<div class="ibox-tools" >
+							<button class="btn btn-primary btn-open" dt-url="{:url('add')}" dt-title="权限添加">添加</button>
+						</div>
+                    </div>
+					<!--<div class="ibox-title">
+						<form class="form-inline">
+							<div class="form-group">						
+								<select class="form-control" name="">         
+									<option value="title">标题</option>
+								</select>
+								<input type="text" class="form-control w120" placeholder="Search">
+								<input type="hidden" >
+								<button class="btn btn-primary">搜索</button>
+								<button dt-table="perm_menu" class="btn btn-primary btn-del">批量删除</button>
+							</div>
+						</form>
+					</div>-->
+                    <div class="ibox-content">
+                        <div class="table-responsive" style="text-align:center">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>管理员ID</th>
+                                        <th>管理员名</th>
+                                        <th>E-mail</th>
+									    <th>角色名</th>
+                                        <th>修改日期</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+									{volist name="result" id="vo"}
+									<tr>
+                                        <td>{$vo.admin_id}</td>
+                                        <td>{$vo.username}</td>
+										<td>{$vo.email}</td>
+										<td>{$vo.role_name}</td>
+                                        <td>{:date("Y-m-d H:i:s",$vo.add_time)}</td>
+                                        <td>
+										{if condition = "in_array('admin_edit',$_SESSION['perm_arr'])"}
+										<button class="btn btn-info btn-open" dt-url="{:url('edit',['id'=>$vo.admin_id])}" dt-title="管理员编辑">编辑</button>
+										{/if}
+										{if condition = "in_array('admin_del',$_SESSION['perm_arr'])"}
+										<button class="btn btn-danger btn-del" dt-field="admin_id" dt-value="{$vo.admin_id}" dt-table="admin">删除</button>
+										{/if}
+                                        </td>
+                                    </tr>
+									{/volist}
+                                </tbody>
+                            </table>
+                        </div>
+					<div id="TP_page">{$result->render()}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+</html>

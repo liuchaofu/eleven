@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>用户列表</h5>
+                    <div class="ibox-tools">
+
+                        <button class="btn btn-primary  btn-open messages" dt-url="{:url('send')}" dt-width="50%"
+                                dt-title="发送信息">发送信息
+                        </button>
+
+                        <button class="btn btn-primary btn-open" dt-url="{:url('users_add')}" dt-width="50%"
+                                dt-title="添加用户">添加
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="ibox-content">
+
+                    <div class="container-fluid" style="text-align: center; ">
+                        <br>
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th><input type="checkbox" id="check_all"></th>
+                                <th>昵称</th>
+                                <th>邮箱</th>
+                                <th>性别</th>
+                                <th>金额</th>
+                                <th>qq</th>
+                                <th>手机</th>
+                                <th>头像</th>
+                                <th>是否被冻结</th>
+                                <th>操作</th>
+                            </tr>
+                            {volist name="list" id="vo"}
+                            <tr>
+                                <td><input type="checkbox" class="id" value="{$vo.user_id} ,{$vo.nickname}|"></td>
+                                <td>{$vo.nickname}</td>
+                                <td>{$vo.email}</td>
+                                <td>
+
+                                    {if condition="$vo.sex eq 0"} 保密
+                                    {elseif condition="$vo.sex eq 1"/}男
+                                    {else /} 女
+                                    {/if}
+
+                                </td>
+                                <td>{$vo.user_money}</td>
+                                <td>{$vo.qq}</td>
+                                <td>{$vo.mobile}</td>
+                                <td>
+                                    {if condition="$vo.oauth eq 'wx'"}
+                                    <img src="{$vo.head_pic}" alt="" width="100px" height="100px" class="img-circle">
+                                    {else /}
+                                    <img src="__UPLOADS__{$vo.head_pic}" alt="" width="100px" height="100px"
+                                         class="img-circle">
+                                    {/if}
+
+                                </td>
+                                <td>
+                                    {if condition="$vo.is_lock eq '1'"}是
+                                    {else /} 否
+                                    {/if}
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-open"
+                                            dt-url="{:url('user_more',['id'=>$vo.user_id])}" dt-title="查看地址信息">查看
+                                    </button>
+
+                                    {if condition="$vo.is_lock eq '0'"}
+                                    <a href="javascript:void(0);" onclick=" ban_user('{$vo.user_id}')"
+                                       class="btn btn-warning ">禁用</a>
+                                    {else /}
+                                    <a href="javascript:void(0);" onclick=" open_user('{$vo.user_id}')"
+                                       class="btn btn-primary ">开启</a>
+                                    {/if}
+
+                                    <button class="btn btn-primary btn-open"
+                                            dt-url="{:url('user_edit',['user_id'=>$vo.user_id])}" dt-title="用户编辑">编辑
+                                    </button>
+                                    <!--<a href="javascript:void(0);" onclick=" del_user('{$vo.user_id}')" class="btn btn-danger">删除</a>-->
+                                    <button class="btn btn-danger btn-del" dt-field="user_id" dt-value="{$vo.user_id}"
+                                            dt-table="users">删除
+                                    </button>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                        <div class="pull-right">
+                            {$list->render()}
+                        </div>
+
+                    </div>
+                    <div style="display: none; text-align: center;" class="check_info">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>收件人</th>
+                                <th>地址</th>
+                                <th>邮箱</th>
+                                <th>手机</th>
+                                <th>是否是默认</th>
+                            </tr>
+                            </thead>
+                            <tbody class="table_info">
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+
+{include file="admin@/public/global_js"/}
+<script type="text/javascript">
+
+    //获取用户
+    function vip() {
+        var data = {};
+
+        //获取所有选中id;
+        var count = 0;
+        var len = $("input[class='id']:checked").length;
+
+        var ids = '';
+        //获取批量删除id
+        $("input[class='id']:checked").each(function () {
+            // ids += $(this).val() + ",";
+            ids += $(this).val();
+            count++;
+        });
+        ids = ids.substring(0, ids.length - 1);//去除最后一个逗号
+        data['ids'] = ids;
+        // console.log(data);
+        if (data['ids']) {
+            layer.msg('成功获取用户');
+            //打开隐藏
+            //追加热门到视图 float: right;margin-right: 45%;
+            // $(".messages").attr('style', '');
+
+            //得到的值去新开的窗口
+            return data;
+        }
+
+
+    }
+
+
+    //查看
+    function see_more(id) {
+        // alert(id);
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Users/user_more')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {id: id},// 你的formid
+            dataType: "json",
+            success: function (data) {
+
+                if (data) {
+
+                    var html = '';
+                    $.each(data, function (index, obj) {
+
+                        //这里面写循环
+                        html += '<tr>\n' +
+                            '                        <td>' +
+                            obj.consignee
+                            + '</td>'
+                        html +=
+                            ' <td>' +
+                            obj.address +
+                            '</td>'
+                        html +=
+                            '                        <td>' +
+                            obj.email +
+                            '</td>'
+                        html +=
+                            '                        <td>' +
+                            obj.mobile +
+                            '</td>';
+                        if (obj.is_default == '1') {
+                            html +=
+                                '<td>' +
+                                '是' +
+
+                                '</td>'
+                                + '</tr>';
+                        } else {
+                            html +=
+                                '<td>' +
+                                '否' +
+
+                                '</td>'
+                                + '</tr>';
+                        }
+
+
+                    });
+
+                    $('.table_info').html(html);
+
+                    layer.open({
+                        type: 1,
+                        area: ['600px', '360px'],
+                        shadeClose: true, //点击遮罩关闭
+                        // content: ".check_info"
+                        content: $('.check_info')
+                    });
+                } else {
+                    // alert('错误');
+                    layer.msg('请检查是否未选择默认地址');
+                }
+            }
+        });
+    }
+
+    //禁用
+    function ban_user(id) {
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Users/user_ban')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {id: id},// 你的formid
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.status == 1) {
+                    layer.msg(data.res, {
+                        icon: 1,
+                        time: 3000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        //do something
+                        window.location.href = 'users_index';
+
+                    });
+                } else {
+                    // alert('错误');
+                    layer.open({content: data.res, time: 2});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Users/user_index')}";
+                    return false;
+                }
+            }
+        });
+    }
+
+    //删除
+    function del_user(id) {
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Users/user_del')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {id: id},// 你的formid
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.status == 1) {
+                    layer.msg(data.res, {
+                        icon: 1,
+                        time: 3000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        //do something
+                        window.location.href = 'users_index';
+
+                    });
+                } else {
+                    // alert('错误');
+                    layer.open({content: data.res, time: 2});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Users/user_index')}";
+                    return false;
+                }
+            }
+        });
+    }
+
+    //开启
+    function open_user(id) {
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Users/user_open')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {id: id},// 你的formid
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.status == 1) {
+                    layer.msg(data.res, {
+                        icon: 1,
+                        time: 3000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        //do something
+                        window.location.href = 'users_index';
+
+                    });
+                } else {
+                    // alert('错误');
+                    layer.open({content: data.res, time: 2});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Users/user_index')}";
+                    return false;
+                }
+            }
+        });
+    }
+</script>
+</html>

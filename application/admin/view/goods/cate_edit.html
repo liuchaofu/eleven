@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品修改</h5>
+                    <a href="javascript:history.back(-1)" class="btn btn-primary" style="float: right; margin-right: 10px;">返回</a>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal" action="{:url('cate_edit')}">
+						<input type="hidden" name="id" value="{$data.id}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="text-danger">*</span><span>商品分类名称</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" name="name" class="form-control" value="{$data.name}" placeholder="请输入文本" > <span class="help-block m-b-none"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="text-danger">*</span><span>父类</span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="pid" dt-selected="{$data.pid|default='0'}">
+                                    <option value="0">首级</option>
+                                    {volist name="cates" id="vo"}
+                                    <option value="{$vo.id}">{$vo['htmlname']}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span>排序</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" name="sort" class="form-control" value="{$data.sort}" placeholder="默认0" > <span class="help-block m-b-none"></span>
+                            </div>
+                        </div>
+						<div class="form-group">
+							<label class="control-label col-sm-3">
+								<span>商品分类图片</span>
+							</label>
+							<div class="col-sm-8">
+								<a class="btn btn-primary btn-img" dt-name="image" dt-value="{$data.image|default=''}"  dt-group="goods_cate" dh-max="1">图片上传</a>
+							</div>
+						</div>
+						<div class="form-group" id="radio" dt-radio="{$data.is_show}">
+                            <label class="col-sm-3 control-label"><span>是否显示</span></label>
+                            <div class="col-sm-8">
+                                <label style="padding-right:15px;">
+									<input type="radio" name="is_show" value="1">显示
+								</label>
+                                <label>
+									<input type="radio" name="is_show" value="0">不显示
+								</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-5 col-sm-7">
+                                <button type="button" class="btn btn-primary btn-comply" dt-true-url="{:url('cates')}">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{include file="admin@/public/global_js"/}
+</html>

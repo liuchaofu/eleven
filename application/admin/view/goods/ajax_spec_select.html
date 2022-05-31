@@ -1,0 +1,182 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+{if $action == 'edit'}
+<table class="table table-bordered" id="goods_spec_tab">                                
+    <tr>
+        <td colspan="2"><b>商品规格:</b></td>
+    </tr>
+	{volist name="specList" id="vo"}
+    <tr>
+        <td>{$vo.name}:</td>
+        <td>                          
+			{volist name="vo['spec_item']" id="v"}
+			<button type="button" dt-spec-id='{$vo.id}' dt-item-id='{$v.id}' {if in_array($v.id,$items_ids)}class="btn btn-primary"{else/}class="btn"{/if}>{$v.item}</button>
+			<span style="width:40px;">
+				{if condition="$vo['is_upload_image'] eq 1"}
+				<input type="file" style="display:none;" class="file">
+				<img width="35" height="35" style="cursor:pointer;" {if isset($specImageList[$v.id])}src="__UPLOADS__/{$specImageList[$v.id]}" {else/}src="__PUBLIC__/admin/img/add-button.jpg"{/if} class="is_upload_img" dt-item-id="{$v.id}" dt-group="goods_spec"/>
+				{if isset($specImageList[$v.id])}
+				<input type="hidden" name="spec_item_image[{$v.id}]" value="{$specImageList[$v.id]|default=''}">
+				<span class="ys-btn-close" style="top:-12px;left:-15px;">×</span>
+				{/if}
+				{/if}
+			</span>
+            {/volist}      
+        </td>
+    </tr>                                    
+    {/volist}
+</table>
+{else/}
+<table class="table table-bordered" id="goods_spec_tab">                                
+    <tr>
+        <td colspan="2"><b>商品规格:</b></td>
+    </tr>
+	{volist name="specList" id="vo"}
+    <tr>
+        <td>{$vo.name}:</td>
+        <td>                          
+			{volist name="vo['spec_item']" id="v"}
+			<button type="button" dt-spec-id='{$vo.id}' dt-item-id='{$v.id}' class="btn">{$v.item}</button>
+			<span style="width:40px;">
+				{if condition="$vo['is_upload_image'] eq 1"}
+				<input type="file" style="display:none;" class="file">
+				<img width="35" height="35" style="cursor:pointer;" src="__PUBLIC__/admin/img/add-button.jpg" class="is_upload_img" dt-item-id="{$v.id}" dt-group="goods_spec"/>
+				{/if}
+			</span>
+            {/volist}      
+        </td>
+    </tr>                                    
+    {/volist}
+</table>
+{/if}
+<script type="text/javascript">
+// 规格按钮点击事件
+$("#ajax_spec_data button").click(function(){
+	if($(this).hasClass('btn-primary'))
+	{
+		$(this).removeClass('btn-primary');
+	}else{
+		$(this).addClass('btn-primary');
+	}
+	ajaxGetSpecInput();	  	   	 
+});
+function ajaxGetSpecInput()
+{
+	var goods_id = $("input[name='goods_id']").val()? $("input[name='goods_id']").val():0;
+	var spec_arr = {};// 用户选择的规格数组 	  	  
+	// 选中了哪些属性	  
+	$("#goods_spec_tab  button").each(function(){
+	    if($(this).hasClass('btn-primary'))	
+		{
+			var spec_id = $(this).attr('dt-spec-id');
+			var item_id = $(this).attr('dt-item-id');
+			if(!spec_arr.hasOwnProperty(spec_id)){
+				spec_arr[spec_id] = [];}
+		    spec_arr[spec_id].push(item_id);
+			//console.log(spec_arr);
+		}		
+	});
+	$.post("{:url('ajaxGetSpecInput')}",{'spec_arr':spec_arr,'goods_id':goods_id},function(res){
+		$("#spec_item_tab").html('').append(res);
+		hbdyg();  // 合并单元格
+	})
+}
+//有无效切换
+$(document).on("click", '.delete_item', function (e) {
+	if($(this).text() == '无效'){
+		$(this).parent().parent().find('input').attr('disabled','disabled');
+		$(this).parent().parent().find('input').val('');
+		$(this).text('有效');
+	}else{
+		$(this).text('无效');
+		$(this).parent().parent().find('input').removeAttr('disabled');
+	}
+})
+// 合并单元格
+function hbdyg() {
+	var tab = document.getElementById("spec_input_tab"); //要合并的tableID
+	var maxCol = 2, val, count, start;  //maxCol：合并单元格作用到多少列 
+	if (tab != null) {
+		for (var col = maxCol - 1; col >= 0; col--) {
+			count = 1;
+			val = "";
+			for (var i = 0; i < tab.rows.length; i++) {
+				if (val == tab.rows[i].cells[col].innerHTML) {
+					count++;
+				} else {
+					if (count > 1) { //合并
+						start = i - count;
+						tab.rows[start].cells[col].rowSpan = count;
+						for (var j = start + 1; j < i; j++) {
+							tab.rows[j].cells[col].style.display = "none";
+						}
+						count = 1;
+					}
+					val = tab.rows[i].cells[col].innerHTML;
+				}
+			}
+			if (count > 1) { //合并，最后几行相同的情况下
+				start = i - count;
+				tab.rows[start].cells[col].rowSpan = count;
+				for (var j = start + 1; j < i; j++) {
+					tab.rows[j].cells[col].style.display = "none";
+				}
+			}
+		}
+	}
+}
+//点击上传图标上传图片
+$(".is_upload_img").click(function(){
+	var _this = $(this);
+	$(_this).parent().find('.file').trigger("click").change(function(e){
+		var group = $(_this).attr('dt-group');
+		var item_id = $(_this).attr('dt-item-id');
+		var files = e.target.files || e.dataTransfer.files;
+		var formData = new FormData();
+		formData.append('file', files[0]);
+		formData.append('group', group);
+		formData.append('size', '2');
+		 //ajax异步上传  
+		$.ajax({  
+			url: '__URL__/upload_img',  
+			type: 'POST',  
+			data: formData,
+			dataType: 'json',  
+			contentType: false, //必须false才会自动加上正确的Content-Type  
+			processData: false,  //必须false才会避开jQuery对 formdata 的默认处理  
+			success: function(res){
+				if(res.status){
+					$(_this).attr('src','__UPLOADS__'+res.data);
+					var html = '<input type="hidden" name="spec_item_image['+item_id+']" value='+res.data+'>'+
+								'<span class="ys-btn-close" style="top:-12px;left:-15px;">×</span>';
+					$(_this).parent().find('.ys-btn-close').remove();
+					$(_this).parent().find('input[type="hidden"]').remove();
+					$(_this).parent().append(html);
+				}
+				return layer.msg(res.msg);            
+			},
+		});
+		$(_this).parent().find('.file').val('');
+		$(_this).parent().find('.file').off('change');
+	});
+});
+//点击删除图标时,进行删除操作
+$(document).on("click",'.ys-btn-close',function(){
+	var _this = $(this);
+    var path = $(this).parent().find('img').attr('src');
+	var url = "/admin/common/file_del";//图片删除地址
+	$.ajax({
+		url: url,
+		type: "post",
+		dataType: "json",
+		data: {'path':path},
+		success: function(res) {
+			layer.msg(res.msg);
+			if(res.status){
+				_this.parent().find('img').attr('src','__PUBLIC__/admin/img/add-button.jpg');
+				_this.parent().find('input[type="hidden"]').remove();
+				_this.remove();
+			}
+		}
+	});
+});
+</script> 

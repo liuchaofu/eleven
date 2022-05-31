@@ -1,0 +1,100 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>类别列表</h5>
+                    <div class="ibox-tools" >
+
+                        <!--<a href="{:url('admin/banner/banner_add')}" class="btn btn-primary" >添加类别</a>-->
+                        <!--<button class="btn btn-primary btn-open" dt-url="{:url('banner_add')}" dt-width="50%" dt-title="添加类别">添加</button>-->
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="container-fluid" style="text-align: center; ">
+                        <br>
+                        <table class="table">
+                            <tbody><tr>
+                                <th>类别</th>
+                                <th>描述</th>
+                                <th>操作</th>
+                            </tr>
+                            {volist name="list" id="vo"}
+                            <tr>
+                                <td>{$vo.name}</td>
+                                <td>{$vo.desc}</td>
+
+                                <td>
+                                    <!--<a href="{:url('uploads_edit',['id'=>$vo.id])}"><button class="btn btn-warning">编辑</button></a>-->
+                                    <!--<a href="javascript:void(0);" onclick="del_banner('{$vo.id}')" class="btn btn-danger">删除</a>-->
+                                    <!--<button class="btn btn-warning btn-open" dt-url="{:url('banner_edit',['id'=>$vo.id])}" dt-title="类别修改">编辑</button>-->
+                                    <!--<button class="btn btn-danger btn-del" dt-field="id" dt-value="{$vo.id}" dt-table="nav_list">删除</button>-->
+                                    <button class="btn btn-primary btn-open" dt-url="{:url('banner_info',['id'=>$vo.id])}" dt-title="Banner图查看">查看</button>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                        <div class="pull-right">
+                            {$list->render()}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+{include file="admin@/public/global_js"/}
+<script type="text/javascript">
+
+
+    function del_banner(id) {
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Banner/banner_del')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {id:id},// 你的formid
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.status ==1){
+                    layer.msg(data.res, {
+                        icon: 1,
+                        time: 3000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        //do something
+                        window.location.href='banner_index';
+
+                    });
+                }else {
+                    // alert('错误');
+                    layer.open({content:data.res,time:2});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Banner/banner_index')}";
+                    return false;
+                }
+            }
+        });
+    }
+
+</script>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>商品列表</h5>
+						<div class="ibox-tools" >
+							<button class="btn btn-primary btn-open" dt-url="{:url('add')}" dt-title="商品添加">添加</button>
+						</div>
+                    </div>
+                    <div class="ibox-title">
+                        <form class="form-inline" action="{:url('index')}" method="post">
+                            <div class="form-group">
+                                <select class="form-control" name="cat_id" dt-selected="{$param.cat_id|default=0}">
+									<option value="0">请选择...</option>
+                                    {volist name="cates" id="vo"}
+                                        <option value="{$vo.id}">{$vo.htmlname}</option>
+                                    {/volist}
+                                </select>
+                                <input type="text" name="keyword" value="{$param.keyword|default=''}" class="form-control w120" placeholder="商品名称">
+                                <input type="text" name="goods_sn" value="{$param.goods_sn|default=''}" class="form-control w120" placeholder="商品货号">
+                                <button class="btn btn-primary">搜索</button>
+                                <button type="button" class="btn btn-primary btn-dels">批量删除</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive" style="text-align:center">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+										<th><input type="checkbox" id="check_all"></th>
+                                        <th>ID</th>
+                                        <th>商品名称</th>
+                                        <th>货号</th>
+									    <th>分类</th>
+                                        <th>价格</th>
+                                        <th>推荐</th>
+                                        <th>热卖</th>
+                                        <th>上/下架</th>
+										<th>是否展示</th>
+										<th width=100 >排序</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+									{volist name="list" id="vo"}
+									<tr>
+										<td><input type="checkbox" class="id" value="{$vo.goods_id}"></td>
+                                        <td>{$vo.goods_id}</td>
+                                        <td>{$vo.goods_name}</td>
+										<td>{$vo.goods_sn}</td>
+										<td>{$vo.cate_name}</td>
+                                        <td>{$vo.price}</td>
+                                        <td>
+											<div class="layui-form">
+												<input type="checkbox" name="is_recommend" dt-key="{$vo.goods_id}" dt-field="is_recommend" dt-table="goods" lay-skin="switch" lay-filter="switchStatus" {if condition="$vo.is_recommend neq '0'"}checked{/if} lay-text="开启|关闭">
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-form">
+												<input type="checkbox" name="is_hot" dt-key="{$vo.goods_id}" dt-field="is_hot" dt-table="goods" lay-skin="switch" lay-filter="switchStatus" {if condition="$vo.is_hot neq '0'"}checked{/if} lay-text="开启|关闭">
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-form">
+												<input type="checkbox" name="is_on_sale" dt-key="{$vo.goods_id}" dt-field="is_on_sale" dt-table="goods" lay-skin="switch" lay-filter="switchStatus" {if condition="$vo.is_on_sale neq '0'"}checked{/if} lay-text="开启|关闭">
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+												<input type="checkbox" name="is_show" dt-key="{$vo.goods_id}" dt-field="is_show" dt-table="goods" lay-skin="switch" lay-filter="switchStatus" {if condition="$vo.is_show neq '0'"}checked{/if} lay-text="开启|关闭">
+											</div>
+										</td>
+										<td><input value="{$vo.sort}" class="form-control ajax-input" style="text-align:center" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" dt-url="{:url('changeField',['table'=>'goods','field'=>'sort','key'=>$vo.goods_id])}"></td>
+                                        <td>
+                                        <a href="#" class="btn btn-success btn-open" dt-url="{:url('preview',['id'=>$vo.goods_id])}" dt-title="商品预览">预览</a>
+										{if condition = "in_array('goods_edit',$_SESSION['perm_arr'])"}
+										<button class="btn btn-info btn-open" dt-url="{:url('edit',['id'=>$vo.goods_id])}" dt-title="商品编辑">编辑</button>
+										{/if}
+										{if condition = "in_array('goods_del',$_SESSION['perm_arr'])"}
+										<button class="btn btn-danger btn-del" dt-field="goods_id" dt-value="{$vo.goods_id}" dt-table="goods">删除</button>
+										{/if}
+                                        </td>
+                                    </tr>
+									{/volist}
+                                </tbody>
+                            </table>
+                        </div>
+						<div id="TP_page">{$pages}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+</html>

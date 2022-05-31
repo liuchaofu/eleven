@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/js/layui/css/layui.css">
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" style="display:none;">
+                        <h5>权限添加</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+									<span class="text-danger">*</span>
+									<span>菜单名</span>
+								</label>
+                                <div class="col-sm-8">
+                                    <input  name="menu_name"  type="text" class="form-control" >
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-sm-3 control-label">
+									<span class="text-danger">*</span>
+									<span>标识名</span>
+								</label>
+                                <div class="col-sm-8">
+                                    <input  name="tag_name"  type="text" class="form-control" >
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-sm-3 control-label">链接</label>
+                                <div class="col-sm-8">
+                                    <input  name="url"  type="text" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">图标</label>
+                                <div class="col-sm-8">
+                                    <div class="layui-form">
+                                        <div class="layui-form-item">
+                                            <!--<label for="" class="layui-form-label">选择图标</label>-->
+                                            <div class="layui-input-block" style=" margin:0; min-height: 36px;">
+                                                <!--<input type="text" name="icon" id="ic">-->
+                                                <input type="text" name="icon" id="iconPicker" lay-filter="iconPicker" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">
+									<span class="text-danger">*</span>
+									<span>选择父级栏目</span>
+								</label>
+								<div class="col-sm-8">
+									<select class="form-control" name="pid">
+									<option value="0">顶级目录</option>
+									{volist name="result" id="vo"}
+									<option value="{$vo['id']|default=""}" >{$vo['htmlname']}</option>
+									{/volist}
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+                                <label class="col-sm-3 control-label">排序</label>
+                                <div class="col-sm-8">
+                                    <input  name="sort"  type="text" class="form-control" placeholder="默认为0,排序越大越靠前">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-3">
+                                    <span class="btn btn-primary btn-comply">提交</span>
+									<button class="btn btn-close">取消</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+<script src="__PUBLIC__/admin/js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/public/static/admin/js/layer/module/'
+    }).extend({
+        iconPicker: 'iconPicker/iconPicker'
+    });
+</script>
+<script>
+    layui.use(['iconPicker'], function () {
+        var iconPicker = layui.iconPicker;
+            // form = layui.form;
+
+            iconPicker.render({
+            // 选择器，推荐使用input
+            elem: '#iconPicker',
+            // 数据类型：fontClass/unicode，推荐使用fontClass
+            type: 'fontClass',
+            // 是否开启搜索：true/false
+            search: true,
+            // 是否开启分页
+            // page: true,
+            // 每页显示数量，默认12
+            // limit: 12,
+            // 点击回调
+            click: function (data) {
+                //追加到文本框里面去
+                var icon = data.icon;
+                $(".iconPicker").val(icon);
+            }
+        });
+
+
+    });
+
+</script>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+					<div class="ibox-title" style="display:none;">
+                        <h5>角色添加</h5>
+                        <div class="ibox-tools" style="display:none;">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal" action="{:url('add')}">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+									<span class="text-danger">*</span><span>用户名<span>
+								</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="username">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+									<span class="text-danger">*</span><span>密码</sapn>
+								</label>
+                                <div class="col-sm-8">
+                                    <input type="password" name="password" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+								<span class="text-danger">*</span>确认密码：</label>
+                                <div class="col-sm-8">
+                                    <input type="password" name="confirm_password" class="form-control" placeholder="请再次输入您的密码">          
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+									<span>E-mail</span>
+								</label>
+                                <div class="col-sm-8">
+                                    <input name="email" class="form-control" type="email">
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-sm-3 control-label">
+									<span class="text-danger">*</span><span>角色<span>
+								</label>
+                                <div class="col-sm-8">
+									<select name="role_id" class="form-control">
+									<option value="0" >请选择角色</option>
+									{volist name="role" id="vo"}
+									<option value="{$vo.role_id}">{$vo.role_name}</option>
+									{/volist}
+									</select>
+								</div>
+                            </div>
+							<!--<div class="form-group">
+								<label class="control-label col-sm-3">
+									<span>复选测试</span>
+								</label>
+								<div class="col-sm-8">
+									<label class="checkbox-inline">
+										<input type="checkbox" class="checkbox" name="attribute[]" value="1">1
+									</label>
+									<label class="checkbox-inline">
+										<input type="checkbox" class="checkbox" name="attribute[]" value="2">2
+									</label>
+									<label class="checkbox-inline">
+										<input type="checkbox" class="checkbox" name="attribute[]" value="3">3
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><span class="text-danger">*</span><span>单选测试</span></label>
+								<div class="col-sm-8">
+									<label style="padding-right:15px;">
+										<input type="radio" name="status" value="1" checked > 是
+									</label>
+									<label>
+										<input type="radio"  name="status" value="0"> 否
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-3">
+									<span class="text-danger">*</span>
+									<span>textarea测试</span>
+								</label>
+								<div class="col-sm-8">
+									<textarea class="form-control" name="description" placeholder="输入摘要内容" ></textarea>
+								</div>
+							</div>-->
+                            <div class="modal-footer">
+								<button type="button" class="btn btn-primary btn-comply">提交</button>
+								<button type="button" class="btn btn-default btn-close" >取消</button>
+							</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{include file="admin@/public/global_js" /}
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+    <link href="__PUBLIC__/admin/css/plugins/treeview/bootstrap-treeview.css" rel="stylesheet">
+    <style type="text/css">
+        .button_z{
+            position: relative;
+            float: right;
+            margin-right: 10px;
+            margin-top: -30px;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品分类列表</h5>
+                    <div class="ibox-tools" >        
+                        <button class="btn btn-primary btn-open" dt-url="{:url('cate_add')}" dt-title="添加分类">添加</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="tree">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{include file="admin@/public/global_js" /}
+<script>
+    //修改
+    function edit(id){
+        var href ="cate_edit/id/"+id;
+        window.location.href=href;
+    }
+    function del(id){
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Goods/cate_del')}",
+            data: {id:id},
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.status ==1){
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 3000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href='cates';
+                    });
+                }else {
+                    layer.open({content:data.msg,time:3000});//执行有误
+                }
+            }
+        });
+
+    }
+    $(function () {
+        $.ajax({
+            type: "Post",
+            url: "{:url('cates')}",
+            data: {id: 1},
+            dataType: "json",
+            success: function (result) {
+                $('#tree').treeview({
+                    data: result, // 数据源
+                    showCheckbox: true, //是否显示复选框
+                    highlightSelected: true, //是否高亮选中
+					//nodeIcon: 'glyphicon glyphicon-user', //节点上的图标
+                    //nodeIcon: 'glyphicon glyphicon-globe',
+                    emptyIcon: '', //没有子节点的节点图标
+                    multiSelect: false, //多选
+                    onNodeChecked: function (event,data) {
+                    },
+                    onNodeSelected: function (event, data) {
+                        // alert('选中');
+                    }
+                });
+            },
+            error: function () {
+                alert("树形结构加载失败！")
+            }
+        });
+
+
+    })
+
+</script>
+<script src="__PUBLIC__/admin/js/bootstrap-treeview.js"></script>
+
+</html>

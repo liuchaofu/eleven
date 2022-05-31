@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+			<div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <form class="form-horizontal" action="{:url('edit')}">
+						<input name="id" value="{$data.id}" style="display:none;" />
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">品牌名</label>
+                                <div class="col-sm-8">
+                                    <input  name="name" type="text" class="form-control" value="{$data.name}" >
+                                </div>
+                            </div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">分类选择</label>
+								<div class="col-sm-8">
+                                    <select class="form-control" name="cat_id" dt-selected="{$data.cat_id|default=''}">
+										<option value="0">首级</option>
+										{volist name="cates" id="vo"}
+										<option value="{$vo['id']|default=""}" >{$vo['htmlname']}</option>
+										{/volist}
+									</select>
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-sm-3 control-label"><span>品牌描述</span></label>
+                                <div class="col-sm-8">
+                                    <input name="desc"  type="text" class="form-control" value="{$data.desc|default=''}" >
+                                </div>
+                            </div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><span class="text-danger">*</span><span>logo</span></label>
+								<div class="col-sm-8">
+									<a class="btn btn-primary btn-img" dt-name="logo" dt-value="{$data.logo|default=""}" dt-group="brand">logo上传</a>
+								</div>
+							</div>
+                            <div class="form-group">
+								<label class="col-sm-3 control-label"><span>排序</span></label>
+								<div class="col-sm-8">
+									<input type="text" name="sort" class="form-control" value="{$data.sort}" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></span>
+								</div>
+							</div>
+							<div class="form-group" id="radio" dt-radio="{$data.is_show}">
+								<label class="col-sm-3 control-label"><span class="text-danger">*</span><span>是否显示</span></label>
+								<div class="col-sm-8">
+									<label style="padding-right:15px;">
+										<input type="radio" name="is_show" value="1">是
+									</label>
+									<label>
+										<input type="radio"  name="is_show" value="0">否
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <span class="btn btn-primary btn-comply">提交</span>
+									<button class="btn btn-close">取消</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+			</div>
+        </div>
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+<script type="text/javascript">
+var i=true;
+$(document).ready(function(){
+	$("#checkall").click(function(){
+		if (i) {
+			$("input[type='checkbox']").prop("checked", true);//attr点击第三次之后没反应了
+			i=false;
+		}
+		else {
+			$("input[type='checkbox']").prop("checked", false);
+			i=true;
+		}
+	})
+});
+</html>

@@ -1,0 +1,133 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+
+</head>
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins no-print">
+                <div class="ibox-title">
+                    <h5>清单</h5>
+                    <a href="javascript:history.back(-1)" class="btn btn-primary" style="float: right; margin-right: 10px;">返回</a>
+                </div>
+
+                    <div class="ibox-content p-xl">
+                        <div class="row">
+
+                            {volist name="more" id ="vo" }
+                            <div class="col-sm-6">
+
+                                <address>
+                                    <b>收货人信息</b>:{$vo.consignee}<br>
+                                    <b>联系电话</b>:{$vo.mobile}<br>
+                                    <b>邮箱</b>:{$vo.email}<br>
+                                    <b>收货地址</b>:
+                                    {$vo.pro_name},{$vo.city_name},{$vo.area_name},{$vo.address}<br>
+                                    <!--<abbr title="Phone">总机：</abbr> (+86 10) 5992 8888-->
+                                </address>
+                            </div>
+
+                            <div class="col-sm-6 text-right">
+                                <h4>单据编号：</h4>
+                                <h4 class="text-navy">{$vo.order_sn}</h4>
+                                <b>配送方式:</b>{$vo.shipping_name}<br>
+                                <b>订单总价:</b>{$vo.total_amount}<br>
+                                <!--<b>商品价格:</b>{$vo.goods_price}<br>-->
+                                <b>配送费用:</b>{$vo.shipping_price}<br>
+                                <!--<b>使用积分:</b>{$vo.integral}<br>-->
+                                <!--<b>使用余额:</b>{$vo.user_money}<br>-->
+                                <!--<b>应付金额:</b>{$vo.order_amount}<br>-->
+                                <b>发票抬头:</b>{$vo.invoice_title}<br>
+
+                                <p>
+                                    <span><strong>下单时间：</strong> {$vo.add_time|date="Y-m-d H:i:s",###}</span>
+                                </p>
+                            </div>
+                        </div>
+                        {/volist}
+
+
+
+                        <div class="table-responsive m-t">
+                            <table class="table invoice-table">
+                                <thead>
+                                <tr>
+                                    <th>清单</th>
+                                    <th>数量</th>
+                                    <th>单价</th>
+                                    <th>折扣</th>
+                                    <th>总价</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="list" id="li"}
+                                    <tr>
+                                        <td>
+                                            <div><strong>{$li.goods_name}</strong>
+                                            </div>
+                                        </td>
+                                        <td>{$li.goods_num}</td>
+                                        <td>&yen;{$li.goods_price}</td>
+                                        <td>{$li.member_goods_price}</td>
+                                        <td>&yen;{$li.final_price}</td>
+                                    </tr>
+                                {/volist}
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /table-responsive -->
+
+                        <table class="table invoice-total">
+                            <tbody>
+                            <tr>
+                                <td><strong>总价：</strong>
+                                </td>
+                                <td>&yen;{$final_price}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>总计</strong>
+                                </td>
+                                <td>&yen;{$final_price}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-right">
+                            <a class="btn btn-primary" href="javascript:printDiv()"><i class="glyphicon glyphicon-print"></i> 打印</a>
+                        </div>
+
+
+                    </div>
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+
+{include file="admin@/public/global_js"/}
+ <script type="text/javascript">
+     function printDiv()
+     {
+         var oldStr = document.body.innerHTML;
+         $('.no-print').hide();
+         window.print();
+         document.body.innerHTML = oldStr;
+     }
+
+ </script>
+
+
+</html>

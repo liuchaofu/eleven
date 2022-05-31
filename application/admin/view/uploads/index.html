@@ -1,0 +1,108 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Banner列表</h5>
+                        <div class="ibox-tools" >
+                            <a href="{:url('uploads/fileinput')}" class="btn btn-primary" >添加图片</a>
+
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="container-fluid" style="text-align: center; ">
+                            <br>
+                            <table class="table">
+                                <tbody><tr>
+                                    <th>名字</th>
+                                    <th>图片</th>
+                                    <th>描述</th>
+                                    <th>是否启用</th>
+                                    <th>操作</th>
+                                </tr>
+                                {volist name="data" id="vo"}
+                                <tr>
+                                    <td>{$vo.name}</td>
+                                    <td>
+
+                                        <!--<img src="__UP__{$vo.url}" alt="" width="100px;" height="100px;">-->
+                                        <img src="__UPLOADS__{$vo.url}" alt="" width="180px;" height="100px;">
+                                    </td>
+                                    <td>{$vo.desc}</td>
+                                    <td>
+                                        {if condition=" $vo.is_show eq '0' "}是
+                                        {else /} 否
+                                        {/if}
+
+                                    </td>
+                                    <td>
+                                        <!--<a href="{:url('banner_edit',['id'=>$vo.id])}" class="btn btn-success">编辑</a>-->
+                                        <!--<a href="javascript:void(0);" onclick="del_banner('{$vo.id}')"  class="btn btn-info">删除</a>-->
+
+                                        <button class="btn btn-warning btn-open" dt-url="{:url('uploads_edit',['id'=>$vo.id])}" dt-title="Banner编辑">编辑</button>
+                                        <button class="btn btn-danger btn-del" dt-field="id" dt-value="{$vo.id}" dt-table="banner">删除</button>
+                                    </td>
+
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                            <div class="pull-right">
+                                {$data->render()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</body>
+
+{include file="admin@/public/global_js"/}
+
+<script type="text/javascript">
+    function del_banner(id) {
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Uploads/uploads_del')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {id:id},// 你的formid
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.status ==1){
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 3000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        //do something
+                        window.location.href='index';
+
+                    });
+                }else {
+                    // alert('错误');
+                    layer.open({content:data.res,time:2});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Uploads/index')}";
+                    return false;
+                }
+            }
+        });
+    }
+</script>
+
+</html>

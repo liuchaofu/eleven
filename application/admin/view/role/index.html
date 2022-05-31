@@ -1,0 +1,59 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>角色列表</h5>
+						<div class="ibox-tools" >
+							<button class="btn btn-primary btn-open" dt-url="{:url('add')}" dt-title="角色添加">添加</button>
+						</div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive" style="text-align:center">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>角色ID</th>
+                                        <th>角色名</th>
+                                        <th>添加日期</th>
+										<th>角色描述</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+									{volist name="result" id="vo"}
+									<tr>
+                                        <td>{$vo.role_id}</td>
+                                        <td>{$vo.role_name}</td>
+                                        <td>{:date("Y-m-d H:i:s",$vo.add_time)}</td>
+                                        <td>{$vo.role_desc}</td>
+                                        <td>
+										{if condition = "in_array('role_edit',$_SESSION['perm_arr'])"}
+										<button class="btn btn-info btn-open" dt-url="{:url('edit',['id'=>$vo.role_id])}">编辑</button>
+										{/if}
+										{if condition = "in_array('role_del',$_SESSION['perm_arr'])"}
+										<button class="btn btn-danger btn-del" dt-field="role_id" dt-value="{$vo.role_id}" dt-table="admin_role">删除</button>
+										{/if}
+                                        </td>
+                                    </tr>
+									{/volist}
+                                </tbody>
+                            </table>
+                        </div>
+						<div id="TP_page">{$result->render()}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+</html>

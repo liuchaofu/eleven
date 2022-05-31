@@ -1,0 +1,44 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+    <style type="text/css">
+        .table{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-content">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">评论详情</div>
+                        <div class="panel-body">
+                            {$list.content}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+
+{include file="admin@/public/global_js"/}
+
+
+</html>

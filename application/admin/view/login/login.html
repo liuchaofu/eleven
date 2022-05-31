@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="{$keywords}">
+    <meta name="description" content="{$description}">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/css/plugins/admin-login/normalize.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/css/plugins/admin-login/default.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/css/plugins/admin-login/styles.css">
+    <title>AdminLogin</title>
+</head>
+<body>
+
+<div id="logo">
+    <h1 class="hogo"><i> ELEVEN ADMIN</i></h1>
+</div>
+<section class="stark-login">
+    <form class="form-horizontal" action="{:url('login')}" method="">
+        <div id="fade-box">
+            <input type="text" name="name" id="用户名" placeholder="用户名" required="">
+            <input type="password" name="password" placeholder="密码" required="">
+            <div style="width: 400px;height:40px;margin: 20px auto">
+            <input required="" style="width:200px;float:left;margin: 0px;" name="captcha" class="form-control" placeholder="请输入验证码" type="text" />
+            <img  id="captcha" style="width:150px;float:right;height:40px;border-radius: 5px;" src="{:captcha_src()}" alt="captcha" title="点击刷新" />
+            </div>
+            <input type="button" value="登录" class="btn-comply" dt-not-msg="yes" dt-true-url="{:url('index/index')}">
+        </div>
+    </form>
+    <div class="hexagons">
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <br>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <br>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+
+        <br>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <br>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+        <span>⬢</span>
+    </div>
+</section>
+
+<div id="circle1">
+    <div id="inner-cirlce1">
+        <h2> </h2>
+    </div>
+</div>
+<ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+
+
+</body>
+{include file="admin@/public/global_js"/}
+<script type="text/javascript">
+    if(window.top !== window.self){
+        window.top.location = window.location;
+    };
+    $(document).ready(function() {
+        $("#captcha").click(function(){
+            var src='{:captcha_src()}'; //js里面也支持thinkphp定义的常量
+            $(this).attr("src", src+'?random='+Math.random());
+        })
+    });
+</script>
+</html>

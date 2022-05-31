@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+    <style type="text/css">
+        .box{
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .box:before{
+            content: "";
+            width: 0;
+            height: 100%;
+            background: #000;
+            padding: 14px 18px;
+            position: absolute;
+            top: 0;
+            left: 20%;
+            opacity: 0;
+            transition: all 500ms cubic-bezier(0.47, 0, 0.745, 0.715) 0s;
+        }
+        .box:hover:before{
+            width: 100%;
+            left: 0;
+            opacity: 0.5;
+        }
+        .box img{
+            width: 100%;
+            height: auto;
+        }
+        .box .box-content{
+            width: 100%;
+            padding: 14px 18px;
+            color: #fff;
+            position: absolute;
+            top: 38%;
+            left: 0;
+        }
+        .box .title{
+            font-size: 25px;
+            font-weight: 600;
+            line-height: 30px;
+            text-transform: uppercase;
+            margin: 0;
+            opacity: 0;
+            transition: all 0.5s ease 0s;
+        }
+        .box .post{
+            font-size: 15px;
+            text-transform: capitalize;
+            opacity: 0;
+            transition: all 0.5s ease 0s;
+        }
+        .box:hover .title,
+        .box:hover .post{
+            opacity: 1;
+            transition-delay: 0.7s;
+        }
+        .box .icon{
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            margin-top: 15px;
+        }
+        .box .icon li{
+            display: inline-block;
+        }
+        .box .icon li a{
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin-right: 50px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s ease 0s;
+        }
+        .box:hover .icon li a{
+            opacity: 1;
+            transform: translateY(0px);
+            transition-delay: 0.5s;
+        }
+        .box:hover .icon li:last-child a{
+            transition-delay: 0.8s;
+        }
+        @media only screen and (max-width:990px){
+            .box{ margin-bottom: 30px; }
+        }
+
+        /*#showCarousel  .carousel-inner > .item > img {*/
+
+            /*display: block;*/
+            /*width:100%;*/
+            /*height:auto;*/
+
+        /*}*/
+    </style>
+
+    <link href="__PUBLIC__/admin/js/plugins/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+
+</head>
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-content" >
+
+                    <!--pic-->
+
+                    {volist name="list" id="vo"}
+                        <div style="width: 100%;">
+                            <div class="col-md-4 col-sm-6" style="margin-top: 40px;">
+                                <div class="box">
+                                    <img src="__UPLOADS__{$vo.url}" alt="" >
+                                    <div class="box-content">
+                                        <!--<h3 class="title">雷神索尔</h3>-->
+                                        <!--<span class="post">卡通恶搞造型</span>-->
+                                        <ul class="icon">
+                                            <li>
+                                                <a href="#">
+                                                    <button class="btn btn-primary btn-open" dt-url="{:url('banner_imgedit',['id'=>$vo.id])}" dt-title="图片编辑" >
+                                                        编辑</button>
+                                                </a>
+
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <button class="btn btn-danger btn-del" dt-field="id" dt-value="{$vo.id}" dt-table="banner">
+                                                        删除</button>
+                                                </a>
+
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {/volist}
+                    <div style="clear: both">
+
+                    </div>
+                    <br><br>
+
+                    <!--下面的轮播图-->
+                    {if condition="$carousel != [] " }
+                    <div id="showCarousel" style="width: 100%;">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel"
+                             style="width: 500px; height: auto;margin-left: 30%;" >
+                            <!-- 指示器 -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                            </ol>
+
+                            <!-- 轮播图片及说明文字 -->
+                            <div class="carousel-inner" role="listbox">
+                                {volist name='carousel' id ='v'}
+                                <div class="item active">
+                                    <img src="__UPLOADS__{$v.url}" alt="图片1" style="margin: 0 auto;">
+                                    <div class="carousel-caption">
+                                        ...
+                                    </div>
+                                    {/volist}
+                                </div>
+                                {volist name='carousels' id ='vo'}
+                                <div class="item">
+                                    <img src="__UPLOADS__{$vo.url}" alt="图片2" style="margin: 0 auto;">
+                                    <div class="carousel-caption">
+                                        ...
+                                    </div>
+                                </div>
+                                {/volist}
+
+                            </div>
+
+                            <!-- 控制按钮：左右切换 -->
+                            <a class="left carousel-control" href="#carousel-example-generic" role="button"
+                               data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" role="button"
+                               data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    {/if}
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+
+
+{include file="admin@/public/global_js"/}
+
+</html>

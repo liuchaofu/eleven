@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">  
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" style="display:none;">
+                        <h5>管理员编辑</h5>
+                        <!--<div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>-->
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal"  action="{:url('edit')}" >
+                            <input style="display:none;" name="admin_id" value="{$result.admin_id}" />
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">管理员名：</label>
+                                <div class="col-sm-8">
+                                    <input id="username" value="{$result.username}" name="username" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">密码：</label>
+                                <div class="col-sm-8">
+                                    <input id="password"  name="password" class="form-control" type="password" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">确认密码：</label>
+                                <div class="col-sm-8">
+                                    <input id="confirm_password"  class="form-control" type="password">
+                                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">E-mail：</label>
+                                <div class="col-sm-8">
+                                    <input id="email" name="email" value="{$result.email}" class="form-control" type="email">
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-sm-3 control-label">角色选择：</label>
+                                <div class="col-sm-8">
+
+								<select name="role_id" class="form-control" dt-selected="{$result.role_id|default=''}">
+									<option value="0" >请选择角色名</option>
+									{volist name="role" id="vo"}
+									<option value="{$vo.role_id}">{$vo.role_name}</option>
+									{/volist}
+								</select>
+
+								</div>
+                            </div>
+							<div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <span class="btn btn-primary btn-comply">提交</span>
+									<button class="btn btn-close">取消</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{include file="admin@/public/global_js"/}
+</html>

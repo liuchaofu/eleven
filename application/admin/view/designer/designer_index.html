@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>申请列表</h5>
+                    <div class="ibox-tools">
+
+                        <!--<a href="{:url('admin/banner/banner_add')}" class="btn btn-primary" >添加类别</a>-->
+                        <!--<button class="btn btn-primary btn-open" dt-url="{:url('designer_add')}" dt-width="50%"-->
+                                <!--dt-title="添加申请">添加-->
+                        <!--</button>-->
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="container-fluid" style="text-align: center; ">
+
+                        <div class="col-md-12">
+                            <form class="form-inline pull-right" method="get">
+
+
+                                <div class="form-group ">
+                                    开始时间:
+                                    <input type="text" class="date-time form-control w120" name="began" value="{$began}" >
+                                </div>
+
+                                <div class="form-group">
+                                    结束时间:
+                                    <input type="text" class="date-time form-control w120" name="end" value="{$end}" >
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="用户名，品牌，号码，联系人" size="22" name="something" value="{$something}">
+                                </div>
+
+
+                                <button type="submit" class="btn btn-primary">搜索</button>
+
+                            </form>
+                            <br><br>
+                        </div>
+
+                        <br>
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th>用户名</th>
+                                <th>用户头像</th>
+                                <th>品牌</th>
+                                <th>设计师名字</th>
+                                <th>价格区间</th>
+                                <th>联系人姓名</th>
+                                <th>手机</th>
+                                <th>地址</th>
+                                <th>邮箱</th>
+                                <th>微信号</th>
+                                <th>图片</th>
+                                <th>申请时间</th>
+                                <th>申请状态</th>
+                                <th>操作</th>
+                            </tr>
+                            {volist name="lists" id="vo"}
+                            <tr>
+                                <td>{$vo.nickname}</td>
+                                {if condition="$vo.oauth eq 'wx'"}
+                                    <td>
+                                        <img src="{$vo.head_pic}" alt="" style="width: 100px;height: 100px;"  class="img-circle" >
+                                    </td>
+                                {else /}
+                                    <td>
+                                        <img src="__UPLOADS__{$vo.head_pic}" alt="" style="width: 100px;height: 100px;"  class="img-circle" >
+                                    </td>
+                                {/if}
+                                <td>{$vo.brand}</td>
+                                <td>{$vo.designer}</td>
+                                <td>{$vo.price_area}</td>
+                                <td>{$vo.contact_name}</td>
+                                <td>{$vo.mobile}</td>
+                                <td>{$vo.address}</td>
+                                <td>{$vo.email}</td>
+                                <td>{$vo.wechat}</td>
+                                <td>
+                                    {volist name="vo.images" id="mm"}
+                                        <img src="__UPLOADS__{$mm}" alt="" style="width: 180px;height: 100px;">
+                                    {/volist}
+                                </td>
+                                <td>
+                                    <?php echo  date('Y-m-d h:i:s',$vo['reg_time'])?>
+                                </td>
+
+                                <td>
+                                    {if condition="$vo.status eq '0' "}
+                                        <p class="text-info">提交申请</p>
+                                    {elseif condition="$vo.status eq 1"/}
+                                        <p class="text-info">提交初审</p>
+                                    {elseif condition="$vo.status eq 2"/}
+                                        <p class="text-info">论坛评审</p>
+                                    {elseif condition="$vo.status eq 3"/}
+                                        <p class="text-info">完成审核</p>
+                                    {else /}
+                                        <p class="text-info">审核不通过</p>
+                                    {/if}
+
+
+                                </td>
+
+                                <td>
+                                    <!--<a href="{:url('uploads_edit',['id'=>$vo.id])}"><button class="btn btn-warning">编辑</button></a>-->
+                                    <!--<a href="javascript:void(0);" onclick="del_banner('{$vo.id}')" class="btn btn-danger">删除</a>-->
+                                    <!--<button class="btn btn-warning btn-open"-->
+                                            <!--dt-url="{:url('designer_edit',['id'=>$vo.id])}" dt-title="Banner编辑">编辑-->
+                                    <!--</button>-->
+                                    <!--<button class="btn btn-danger btn-del" dt-field="id" dt-value="{$vo.id}"-->
+                                            <!--dt-table="join_apply">删除-->
+                                    <!--</button>-->
+                                    {if condition="$vo.status eq '0' "}
+                                        <a href="javascript:void(0);" status = '1' onclick="changeStatus({$vo.id},$(this))" class="btn btn-info" >提交初审</a>
+                                    {elseif condition="$vo.status eq 1"/}
+                                        <!--<a href="javascript:void(0);" status = '2' onclick="changeStatus({$vo.id},$(this))" class="btn btn-info" >5615</a>-->
+                                    {elseif condition="$vo.status eq 2"/}
+                                        <a href="javascript:void(0);" status = '2' onclick="changeStatus({$vo.id},$(this))" class="btn btn-info" >完成审核</a>
+                                    {elseif condition="$vo.status eq 3"/}
+                                        <!--<a href="javascript:void(0);" class="btn btn-info" >完成审核</a>-->
+                                    {else /}
+                                        <a href="javascript:void(0);"  class="btn btn-danger" >审核不通过</a>
+                                    {/if}
+
+
+
+                                    {if condition="($vo.status == 0) OR ($vo.status == 1) OR ($vo.status == 2)"}
+                                        <button href="javascript:void(0);"  status = '4' onclick="banStatus({$vo.id},$(this))" class="btn btn-danger" >审核不通过</button>
+                                    {/if}
+
+
+                                    <!--{if condition="$vo.status eq '4' "}-->
+
+                                        <!--<button href="javascript:void(0);" status ='0'  onclick="banStatus({$vo.id},$(this))" class="btn btn-info" >重新审核</button>-->
+                                    <!--{/if}-->
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                        <div class="pull-right">
+                            {$list->render()}
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+{include file="admin@/public/global_js"/}
+{include file="admin@/public/public_js"/}
+
+<script type="text/javascript">
+
+
+    //修改状态
+    function changeStatus(id,ele) {
+        //获取状态
+        var status = ele.attr('status');
+        var cc = ele.attr('class');
+        var a = $(".text-info");
+        console.log(a);
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Designer/designer_approval')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {id:id,status:status},// 你的formid
+            dataType: "json",
+            async:true,
+            success: function (data) {
+                console.log(data);
+                if (data.status ==1){
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 1000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+
+                        // if (status == 0){
+                        //     ele.html('提交初审');
+                        //     ele.attr('status',1);
+                        // } else if(status == 1){
+                        //     // ele.text('不显示');
+                        //     ele.html('论坛评审');
+                        //     ele.attr('status',2);
+                        // } else if(status == 2){
+                        //     // ele.text('不显示');
+                        //     ele.html('完成审核');
+                        //     ele.attr('status',3);
+                        // }
+                        location.href = "{:url('admin/Designer/designer_index')}";
+
+                    });
+                }else {
+                    // alert('错误');
+                    layer.open({content:data.res,time:2});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Designer/designer_index')}";
+                    return false;
+                }
+            }
+        });
+    }
+    //直接不批准
+    function banStatus(id,ele) {
+        // console.log(id);
+        //获取状态
+        var status = ele.attr('status');
+
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Designer/banStatus')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {id:id,status:status},// 你的formid
+            dataType: "json",
+            async:true,
+            success: function (data) {
+                console.log(data);
+                if (data.status ==1){
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 1000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        location.href = "{:url('admin/Designer/designer_index')}";
+                    });
+                }else {
+                    // alert('错误');
+                    layer.open({content:data.msg,time:2});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Designer/designer_index')}";
+                    return false;
+                }
+            }
+        });
+    }
+</script>
+</html>

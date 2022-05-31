@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {include file="admin@/public/global_css" /}
+    <style>
+        thead {
+            float: left;
+        }
+
+        tbody tr {
+            display: inline-block;
+
+        }
+
+        th {
+            width: 100px;
+            height: 45px;
+            display: block;
+            padding: 12px;
+        }
+
+        td {
+            width: 110px;
+            height: 45px;
+            display: block;
+            padding: 12px;
+        }
+
+        .no-border {
+            border: 1px solid transparent !important;
+        }
+
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>热门列表</h5>
+                    <div class="ibox-tools">
+
+
+                    </div>
+                </div>
+
+                <div class="ibox-content" style="  min-height: 100vh;">
+
+                    <div class="container-fluid" style="text-align: center;  vertical-align:middle;">
+
+                        <br>
+                        <!--实时热搜榜-->
+                        <table class="table-bordered table-hover no-border"
+                               style="position: relative;margin-left: 20%; display: block;">
+                            <tr>
+
+                                <th>实时热搜</th>
+                                <th>次数</th>
+
+                            </tr>
+                            {volist name="list" id="vo"}
+                            <tr>
+                                {if condition=" $vo.total =='自定热门'"}
+                                <td style="color: #0d8ddb;">{$vo.keys_word}</td>
+                                {else /}
+
+                                <td>{$vo.keys_word}</td>
+                                {/if}
+
+
+                                <td>{$vo.total}</td>
+
+                            </tr>
+                            {/volist}
+
+                        </table>
+                        <br>
+                        <!--修改字段表-->
+                        <!--<table class="table-bordered table-hover no-border"-->
+                               <!--style="position: relative;margin-left: 20%; display: block; color: CornflowerBlue;">-->
+                            <!--<tr>-->
+
+                                <!--<th>修改的热搜</th>-->
+                                <!--<th>修改的排序</th>-->
+
+                            <!--</tr>-->
+                            <!--{volist name="values" id="vo"}-->
+                            <!--<tr>-->
+                                <!--<td>{$vo.value}</td>-->
+                                <!--<td>{$vo.listorder}</td>-->
+                            <!--</tr>-->
+                            <!--{/volist}-->
+
+                        <!--</table>-->
+
+
+                        <div style="clear: both;"></div>
+                    </div>
+
+                    <form id="banner_form" class="form-horizontal" method="post" action="{:url('config_add')}" style=" margin-top: 50px;margin-left: 5%;">
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">
+                                配置条数：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="nums" class="form-control" placeholder="默认7条" style="width: 12%;" value="{$hot_num}" > <span class="help-block m-b-none"></span>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-5 col-sm-7">
+                                <!--<button type="button" class="btn btn-primary"  onclick="banner_add()">添加</button>-->
+                                <span class="btn btn-primary btn-comply" style=" margin-top: -91px;">提交</span>
+                                <!--<button class="btn btn-close">取消</button>-->
+                            </div>
+                        </div>
+
+
+                    </form>
+
+
+
+                    <form id="hot_form" class="form-horizontal " method="post" action="{:url('search_add')}"
+                          enctype="multipart/form-data" style=" margin-top: 50px; margin-left: 16%; margin-bottom: 50px;">
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                自定热门：</label>
+                            <div class="col-sm-9 hots">
+
+
+                                <div class="opt" style="" id="InputsWrapper">
+
+                                    <!--//判断config中有没有值-->
+                                    {if condition="$values neq ''"}
+                                        <a href="javascript:void(0);" id="manual()"></a>
+                                    {else /}
+                                    <input type="text" name="hot[]" class="form-control" placeholder="自定义热门内容"
+                                                    style="width: 25%;" id="hot1"> <span class="help-block m-b-none"></span>
+                                    <p>
+                                        <select name="sort[]" class="select form-control " style="width: 25%;">
+                                            <option value="0">自定义热门排序</option>
+                                            {volist name="sort" id ="so"}
+                                            <option value="{$so.sort}">{$so.sort}</option>
+                                            {/volist}
+                                        </select>
+                                    </p>
+
+                                    {/if}
+
+                                </div>
+
+                                <!--<span class="help-block m-b-none"></span>-->
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <button class="btn btn-primary" id="AddMoreFileBox">新增热词</button>
+
+                                <!--<a href="javascript:void(0);" onclick="manual()" class="btn btn-primary ">回显手动热搜</a>-->
+
+                                {if condition="$show eq '1'"}
+                                <a href="javascript:void(0);" onclick="generate('1')" class="btn btn-primary">生成</a>
+                                {else /}
+
+                                {/if}
+                                <a href="javascript:void(0);" onclick=" preview()" class="btn btn-primary "
+                                   style="float: right; margin-right:56%;">预览</a>
+
+                                <div style="display: none; " class="search_hot">
+                                    <span class="btn btn-primary btn-comply">保存</span>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </form>
+
+                    <div class="info">
+
+                    </div>
+
+                    <div class="pre">
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+
+
+{include file="admin@/public/global_js"/}
+{include file="admin@/public/public_js"/}
+<script src="__PUBLIC__/admin/js/layui/layui.js"></script>
+<script>
+    //动态加载
+    $(document).ready(function () {
+
+        var MaxInputs = 4; //maximum input boxes allowed 允许加入多少个
+        var InputsWrapper = $("#InputsWrapper"); //Input boxes wrapper ID
+        var AddButton = $("#AddMoreFileBox"); //Add button ID
+        var x = InputsWrapper.length; //initlal text box count
+        var FieldCount = 1; //to keep track of text box added
+        $(AddButton).click(function (e) //on add input button click
+        {
+            if (x <= MaxInputs) //max input box allowed
+            {
+                FieldCount++; //text box added increment
+                //add input box
+                $(InputsWrapper).append
+                ('   <div><input type="text" name="hot[]" class="form-control sort_cl" placeholder="自定义热门内容" style="width: 25%;"  > <span class="help-block m-b-none"></span>\n' +
+                    '<button class="btn btn-warning removeclass " style="float: right;margin-right: 65%;margin-top: -2%;">删除</button></div>' +
+                    ' <p class="sort_cl"><select name="sort[]" old="0" class="select form-control "  style="width: 25%;" >\n' +
+                    '                                        <option value="0">自定义热门排序</option>' +
+                    '{volist name="sort" id ="so"}' +
+                    '<option value="{$so.sort}">{$so.sort}</option>' +
+                    '{/volist}'
+                    + '                                    </select> </p><br>');
+                x++; //text box increment
+            }
+            return false;
+        });
+        $("body").on("click", ".removeclass", function (e) { //user click on remove text
+            if (x > 1) {
+                //删除盒子
+                $(this).parent('div').next('.sort_cl').remove();
+                $(this).parent('div').remove(); //remove text box
+                x--; //decrement textbox
+            }
+            return false;
+        })
+    });
+
+    $(function () {
+        var oldVal = "";
+        $('.opt select').each(function () {
+            if ($(this).find("option:selected")) {
+                var _thisVal = $(this).find('option:selected').val();
+                oldVal = $(this).attr("old", _thisVal);
+                $('.opt select').parent().siblings("p").find("option[value=" + _thisVal + "]").not("option[value=0]").hide();
+            }
+        })
+        //需要预加载
+        $(".opt").on('change', 'select', function () {
+            oldVal = $(this).attr("old");
+            // console.log(oldVal);
+            var _thisVal = $(this).find('option:selected').val();
+            // var id=$(this).attr("id");
+            $(this).parent().siblings("p").find("option[value=" + _thisVal + "]").not("option[value=0]").hide();
+            $(this).parent().siblings("p").find("option[value=" + oldVal + "]").show();
+            $(this).find("option[value=" + oldVal + "]").show();
+            $(this).attr("old", _thisVal);
+        })
+    });
+
+</script>
+
+<script>
+    //修改手动热搜
+
+    $(function manual() {
+        //加载层
+        var index = layer.load(2, {
+            shade: false
+
+        }); //0代表加载的风格，支持0-2
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Search/manual')}",//+tab,
+            data: {mark: 1},// 你的formid
+            // data: {mark:mark},// 你的formid
+            dataType: "json",
+            success: function (data) {
+                //关闭
+                layer.closeAll();
+                // console.log(data);return;
+                if (data.status == 1) {
+
+                        //读取热搜榜回显到那个下拉框里面然后操作流程相同
+                        var html = '';
+                        //先循环把数据拿到追加到视图 然后再判断在此追加
+                        $.each(data.data.hot, function (k, v) {
+                            html += ' <div><input type="text" name="hot[]" class="form-control sort_cl" placeholder="自定义热门内容" style="width: 25%;" value= ' + v.value + '> <span class="help-block m-b-none"></span>\n' +
+                                '<button class="btn btn-warning removeclass " style="float: right;margin-right: 65%;margin-top: -2%;">删除</button></div>' +
+                                ' <p class="sort_cl"><select name="sort[]" old="' + v.listorder + '" class="select form-control "  style="width: 25%;" >' +
+                                '                                        <option value="0">自定义热门排序</option>';
+
+                            $.each(data.data.sort, function (key, val) {
+                                html += '<option value="' + val.sort + '" ';
+                                if (val.sort == v.listorder) {
+                                    html += 'selected';
+                                }
+                                html += '>' + val.sort + '</option>'
+
+                            });
+
+                            html += '</select> </p><br><br>';
+                        });
+
+                        $("#InputsWrapper").html(html);
+                        //从新绑定事件
+                        $(function () {
+                            var oldVal = "";
+                            $('.opt select').each(function () {
+                                if ($(this).find("option:selected")) {
+                                    var _thisVal = $(this).find('option:selected').val();
+                                    oldVal = $(this).attr("old", _thisVal);
+                                    $('.opt select').parent().siblings("p").find("option[value=" + _thisVal + "]").not("option[value=0]").hide();
+                                }
+                            });
+                            //ajax异步加载后需要从新绑定事件不然没有jq
+                            $("body").on("click", ".removeclass", function (e) { //user click on remove text
+                                //删除盒子
+                                $(this).parent('div').next('.sort_cl').remove();
+                                $(this).parent('div').remove(); //remove text box
+                            });
+                        });
+
+
+                }else {
+                    // alert('错误');
+                    layer.open({content: data.msg, time: 2000});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Search/search_index')}";
+                    return false;
+                }
+            }
+        });
+
+    })
+
+
+    //预览
+    function preview() {
+
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Search/search_preview')}",//+tab,
+            data: $('#hot_form').serialize(),// 你的formid
+            // data: {mark:mark},// 你的formid
+            dataType: "json",
+            success: function (data) {
+                // console.log(data);return;
+                if (data.status == 1) {
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 1000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        //do something
+                        var str = '<table  class="table-bordered no-border" width="60%;" style="text-align: center; margin-left: 15%;">' +
+                            // '    <thead>' +
+                            '    <tbody>' +
+                            '    <tr>' +
+                            '        <th>关键词</th>' +
+                            // '        <th>次数</th>' +
+
+                            '    </tr>'
+                            // '    </thead>' +
+                        ;
+                        $.each(data.data, function (index, info) {
+                            // console.log(info);return;
+                            str += '<tr>' +
+                                '<td>' + info.keys_word + '</td>' +
+                                // '<td>' + info.total+ '</td>' +
+                                '</tr>';
+                        })
+                        str += '    </tbody>' +
+                            '</table>';
+                        $(".pre").html(str);
+                        //追加热门到视图 float: right;margin-right: 45%;
+                        $(".search_hot").attr('style', 'float: right;margin-right: 2%;');
+
+                    });
+                } else {
+                    // alert('错误');
+                    layer.open({content: data.msg, time: 2000});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Search/search_index')}";
+                    return false;
+                }
+            }
+        });
+    }
+
+    //生成
+    function generate(mark) {
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/Search/search_generate')}",//+tab,
+            // data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+            data: {mark: mark},// 你的formid
+            dataType: "json",
+            success: function (data) {
+                // console.log(data);
+                if (data.status == 1) {
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        time: 2000, //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        //do something
+                        var str = '<table  class="table-bordered no-border" width="50%;" style="text-align: center; margin-left: 20%;">' +
+                            // '    <thead>' +
+                            '    <tbody>' +
+                            '    <tr>' +
+                            '        <th>关键词</th>' +
+                            // '        <th>次数</th>' +
+
+                            '    </tr>'
+                            // '    </thead>' +
+                        ;
+                        $.each(data.data, function (index, info) {
+                            // console.log(info);return;
+                            str += '<tr>' +
+                                '<td>' + info.keys_word + '</td>' +
+                                // '<td>' + info.total+ '</td>' +
+                                '</tr>';
+                        })
+                        str += '    </tbody>' +
+                            '</table>';
+                        $(".info").html(str);
+
+
+                    });
+                } else {
+                    // alert('错误');
+                    layer.open({content: data.msg, time: 2000});//执行有误
+                    if (data.status == -1)
+                        location.href = "{:url('admin/Search/search_index')}";
+                    return false;
+                }
+            }
+        });
+    }
+</script>
+</html>
