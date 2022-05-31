@@ -12,10 +12,10 @@ use think\Log;
 class Payment extends Common
 {
     public $payUrl = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
-    private $appid = 'wx8613ca6ee3d7ad0e';
-    private $appsecret = '3f4e954272d0aeac62e7876d6eafa313';
+    private $appid = 'appid';
+    private $appsecret = 'appsecret';
     private $mch_id = '1549630351';
-    private $key = '2HZh4cL1BtxLNsxddxJ7Nl9hEjKz85I2'; //api密钥
+    private $key = 'key'; //api密钥
 
     /**
      *获取预支付订单
